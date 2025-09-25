@@ -1,0 +1,20 @@
+.chartContainer {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartPlaceholder {
+  text-align: center;
+  color: #666;
+}
+
+.placeholderIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.placeholderText {
+  font-size: 0.875rem;
+}

@@ -1,0 +1,222 @@
+.googleSheetsSetup {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-16) 0;
+}
+
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: var(--space-16);
+  padding-left: var(--space-16);
+}
+
+.setupCard {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.setupHeader {
+  padding: var(--space-16) var(--space-20);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-bg-1);
+  border-bottom: 1px solid var(--color-card-border-inner);
+}
+
+.setupHeader h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+}
+
+.setupContent {
+  padding: var(--space-20);
+}
+
+.setupContent.hidden {
+  display: none;
+}
+
+.setupGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-24);
+}
+
+.setupSection h4 {
+  margin-bottom: var(--space-16);
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: var(--space-8);
+}
+
+.templateTable {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-16);
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.dataTable th,
+.dataTable td {
+  padding: var(--space-12) var(--space-16);
+  text-align: left;
+  border-bottom: 1px solid var(--color-card-border-inner);
+}
+
+.dataTable th {
+  background: var(--color-bg-3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.dataTable td {
+  color: var(--color-text);
+}
+
+.instructions ol {
+  padding-left: var(--space-20);
+}
+
+.instructions li {
+  margin-bottom: var(--space-8);
+  line-height: 1.6;
+}
+
+.instructions a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.syncInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-16);
+  padding: var(--space-12) var(--space-16);
+  background: var(--color-bg-2);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.connectionActions {
+  margin-top: var(--space-16);
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-16);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-standard);
+  border: none;
+  text-decoration: none;
+  position: relative;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.btnPrimary {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.btnPrimary:active:not(:disabled) {
+  background: var(--color-primary-active);
+}
+
+.btnOutline {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.btnOutline:hover:not(:disabled) {
+  background: var(--color-secondary);
+}
+
+.btnSm {
+  padding: var(--space-4) var(--space-12);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.formControl {
+  display: block;
+  width: 100%;
+  padding: var(--space-8) var(--space-12);
+  font-size: var(--font-size-md);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  transition: border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.formControl:focus {
+  border-color: var(--color-primary);
+  outline: var(--focus-outline);
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: var(--space-8);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+}
+
+.formGroup {
+  margin-bottom: var(--space-16);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .setupGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .syncInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
+
+  .setupContent {
+    padding: var(--space-16);
+  }
+}

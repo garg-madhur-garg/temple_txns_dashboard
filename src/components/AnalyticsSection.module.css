@@ -1,0 +1,72 @@
+.analyticsSection {
+  margin: 2rem 0;
+}
+
+.analyticsGrid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.cardHeader {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.cardBody {
+  padding: 1.5rem;
+}
+
+.insightItems {
+  display: grid;
+  gap: 1rem;
+}
+
+.insightItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.insightItem:last-child {
+  border-bottom: none;
+}
+
+.insightLabel {
+  font-weight: 500;
+  color: #666;
+}
+
+.insightValue {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

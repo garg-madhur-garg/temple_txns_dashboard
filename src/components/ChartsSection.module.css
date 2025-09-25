@@ -1,0 +1,16 @@
+.chartsSection {
+  margin-bottom: var(--space-32);
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--space-20);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}

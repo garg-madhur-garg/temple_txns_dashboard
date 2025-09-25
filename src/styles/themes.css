@@ -1,0 +1,155 @@
+/* Theme CSS Variables */
+:root {
+  /* White Theme (Default) */
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8f9fa;
+  --theme-bg-tertiary: #e9ecef;
+  --theme-text-primary: #212529;
+  --theme-text-secondary: #6c757d;
+  --theme-text-muted: #adb5bd;
+  --theme-border: #dee2e6;
+  --theme-border-light: #f1f3f4;
+  --theme-accent: #007bff;
+  --theme-accent-hover: #0056b3;
+  --theme-success: #28a745;
+  --theme-warning: #ffc107;
+  --theme-danger: #dc3545;
+  --theme-info: #17a2b8;
+  --theme-shadow: rgba(0, 0, 0, 0.1);
+  --theme-shadow-hover: rgba(0, 0, 0, 0.15);
+}
+
+/* Black Theme */
+[data-theme="black"] {
+  --theme-bg-primary: #1a1a1a;
+  --theme-bg-secondary: #2d2d2d;
+  --theme-bg-tertiary: #404040;
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #b3b3b3;
+  --theme-text-muted: #808080;
+  --theme-border: #404040;
+  --theme-border-light: #333333;
+  --theme-accent: #4dabf7;
+  --theme-accent-hover: #339af0;
+  --theme-success: #51cf66;
+  --theme-warning: #ffd43b;
+  --theme-danger: #ff6b6b;
+  --theme-info: #74c0fc;
+  --theme-shadow: rgba(0, 0, 0, 0.3);
+  --theme-shadow-hover: rgba(0, 0, 0, 0.4);
+}
+
+/* Saffron Theme */
+[data-theme="saffron"] {
+  --theme-bg-primary: #f3e5ab;
+  --theme-bg-secondary: #e6d073;
+  --theme-bg-tertiary: #d4c05a;
+  --theme-text-primary: #2e1b0e;
+  --theme-text-secondary: #4a2c1a;
+  --theme-text-muted: #6b4423;
+  --theme-border: #d4a574;
+  --theme-border-light: #c19a5b;
+  --theme-accent: #d97706;
+  --theme-accent-hover: #b45309;
+  --theme-success: #4caf50;
+  --theme-warning: #d97706;
+  --theme-danger: #f44336;
+  --theme-info: #2196f3;
+  --theme-shadow: rgba(217, 119, 6, 0.3);
+  --theme-shadow-hover: rgba(217, 119, 6, 0.4);
+}
+
+/* Global theme-aware styles */
+body {
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme toggle button styles */
+.theme-toggle {
+  background: var(--theme-bg-secondary);
+  border: 1px solid var(--theme-border);
+  color: var(--theme-text-primary);
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background: var(--theme-bg-tertiary);
+  border-color: var(--theme-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--theme-shadow);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+.theme-icon {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle:hover .theme-icon {
+  transform: rotate(180deg);
+}
+
+/* Theme-specific button styles */
+.btn {
+  background: var(--theme-bg-secondary);
+  border: 1px solid var(--theme-border);
+  color: var(--theme-text-primary);
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: var(--theme-bg-tertiary);
+  border-color: var(--theme-accent);
+  color: var(--theme-text-primary);
+}
+
+.btn-primary {
+  background: var(--theme-accent);
+  border-color: var(--theme-accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--theme-accent-hover);
+  border-color: var(--theme-accent-hover);
+}
+
+/* Card styles */
+.card {
+  background: var(--theme-bg-secondary);
+  border: 1px solid var(--theme-border);
+  color: var(--theme-text-primary);
+  box-shadow: 0 2px 4px var(--theme-shadow);
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px var(--theme-shadow-hover);
+}
+
+/* Status indicator styles */
+.status-indicator {
+  color: var(--theme-success);
+}
+
+.status-indicator.disconnected {
+  color: var(--theme-danger);
+}
+
+.status-indicator.connecting {
+  color: var(--theme-warning);
+}

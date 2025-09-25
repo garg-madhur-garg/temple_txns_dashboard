@@ -1,0 +1,16 @@
+.kpiSection {
+  margin-bottom: var(--space-32);
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-20);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Income Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="dashboard-title">Google Sheets Income Dashboard</h1>
+                    <div class="dashboard-date" id="currentDate"></div>
+                </div>
+                <div class="header-right">
+                    <div class="connection-status" id="connectionStatus">
+                        <span class="status-indicator disconnected" id="statusIndicator">●</span>
+                        <span class="status-text" id="statusText">Not Connected</span>
+                    </div>
+                    <button class="btn btn--primary btn--sm" id="syncBtn">🔄 Sync Now</button>
+                    <button class="btn btn--outline btn--sm" id="shareBtn">Share Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Google Sheets Setup Section -->
+    <section class="google-sheets-setup">
+        <div class="container">
+            <div class="setup-card" id="setupCard">
+                <div class="setup-header">
+                    <h3>📊 Google Sheets Integration Setup</h3>
+                    <button class="btn btn--outline btn--sm" id="toggleSetup">Show Setup</button>
+                </div>
+                <div class="setup-content hidden" id="setupContent">
+                    <div class="setup-grid">
+                        <div class="setup-section">
+                            <h4>1. API Configuration</h4>
+                            <div class="form-group">
+                                <label for="apiKey" class="form-label">Google Sheets API Key</label>
+                                <input type="text" id="apiKey" class="form-control" placeholder="Enter your API key">
+                            </div>
+                            <div class="form-group">
+                                <label for="spreadsheetId" class="form-label">Spreadsheet ID</label>
+                                <input type="text" id="spreadsheetId" class="form-control" placeholder="Enter spreadsheet ID from URL">
+                            </div>
+                            <div class="form-group">
+                                <label for="sheetRange" class="form-label">Sheet Range</label>
+                                <input type="text" id="sheetRange" class="form-control" value="Sheet2!B:F!B:F" placeholder="e.g., Sheet2!B:F!B:F">
+                            </div>
+                            <button class="btn btn--primary" id="testConnectionBtn">Test Connection</button>
+                        </div>
+                        <div class="setup-section">
+                            <h4>2. Required Sheet Format</h4>
+                            <div class="template-table">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Department</th>
+                                            <th>Cash_Income</th>
+                                            <th>Online_Income</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>2025-09-24</td>
+                                            <td>Guest House</td>
+                                            <td>8000</td>
+                                            <td>12000</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2025-09-24</td>
+                                            <td>Seva Office</td>
+                                            <td>5000</td>
+                                            <td>8000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="setup-section">
+                            <h4>3. Setup Instructions</h4>
+                            <div class="instructions">
+                                <ol>
+                                    <li>Go to <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+                                    <li>Enable Google Sheets API for your project</li>
+                                    <li>Create an API key with Sheets API access</li>
+                                    <li>Make your Google Sheet public or share with API key</li>
+                                    <li>Copy your spreadsheet ID from the URL</li>
+                                    <li>Format your sheet with the columns shown above</li>
+                                    <li>Enter your credentials and test the connection</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sync-info">
+                <span class="last-sync">Last sync: <span id="lastSync">Never</span></span>
+                <span class="auto-sync">Auto-sync: <span id="autoSyncStatus">Every 30 seconds</span></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Date Filter Bar -->
+    <section class="date-filter-bar">
+        <div class="container">
+            <div class="filter-controls">
+                <div class="date-picker-group">
+                    <label for="dateFilter" class="filter-label">Filter by Date:</label>
+                    <input type="date" id="dateFilter" class="form-control form-control--inline">
+                </div>
+                <div class="quick-filters">
+                    <button class="btn btn--outline btn--sm filter-btn active" data-filter="all">All Time</button>
+                    <button class="btn btn--outline btn--sm filter-btn" data-filter="today">Today</button>
+                    <button class="btn btn--outline btn--sm filter-btn" data-filter="yesterday">Yesterday</button>
+                    <button class="btn btn--outline btn--sm filter-btn" data-filter="week">This Week</button>
+                    <button class="btn btn--outline btn--sm filter-btn" data-filter="month">This Month</button>
+                </div>
+                <div class="filter-info">
+                    <span id="filterInfo">Showing all data</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <!-- KPI Cards Section -->
+            <section class="kpi-section">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">₹</div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="totalRevenue">₹0</div>
+                            <div class="kpi-label">Total Revenue</div>
+                            <div class="kpi-growth" id="totalGrowth">--</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">💵</div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="totalCash">₹0</div>
+                            <div class="kpi-label">Cash Income</div>
+                            <div class="kpi-percentage" id="cashPercentage">0%</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🌐</div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="totalOnline">₹0</div>
+                            <div class="kpi-label">Online Income</div>
+                            <div class="kpi-percentage" id="onlinePercentage">0%</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📊</div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="activeDepartments">0</div>
+                            <div class="kpi-label">Active Departments</div>
+                            <div class="kpi-secondary" id="totalDepartments">8 Total</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- All Departments Section -->
+            <section class="departments-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h3>Department Overview</h3>
+                        <div class="department-legend">
+                            <span class="legend-item"><span class="legend-dot active"></span> Has Data</span>
+                            <span class="legend-item"><span class="legend-dot inactive"></span> No Data</span>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <div class="departments-grid" id="departmentsGrid">
+                            <!-- Department cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Daily Income Trend</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn--outline btn--sm" id="exportChart1">📊 Export</button>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="dailyTrendChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Department Performance</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn--outline btn--sm" id="exportChart2">📊 Export</button>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="departmentChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Payment Methods Distribution</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn--outline btn--sm" id="exportChart3">📊 Export</button>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="paymentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section class="analytics-section">
+                <div class="analytics-grid">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Performance Insights</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="insight-items">
+                                <div class="insight-item">
+                                    <div class="insight-label">Best Performing Day</div>
+                                    <div class="insight-value" id="bestDay">--</div>
+                                </div>
+                                <div class="insight-item">
+                                    <div class="insight-label">Top Department</div>
+                                    <div class="insight-value" id="topDepartment">--</div>
+                                </div>
+                                <div class="insight-item">
+                                    <div class="insight-label">Cash vs Online Ratio</div>
+                                    <div class="insight-value" id="cashOnlineRatio">--</div>
+                                </div>
+                                <div class="insight-item">
+                                    <div class="insight-label">Average Daily Revenue</div>
+                                    <div class="insight-value" id="avgDailyRevenue">--</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Table Section -->
+            <section class="data-table-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h3>Income Records (From Google Sheets)</h3>
+                        <div class="table-controls">
+                            <span id="recordCount">0 records</span>
+                            <button class="btn btn--outline btn--sm" id="exportTableBtn">📋 Export Table</button>
+                        </div>
+                    </div>
+                    <div class="card__body">
+                        <div class="table-container">
+                            <table class="data-table" id="incomeTable">
+                                <thead>
+                                    <tr>
+                                        <th class="sortable" data-column="date">Date</th>
+                                        <th class="sortable" data-column="department">Department</th>
+                                        <th class="sortable" data-column="cash">Cash Income</th>
+                                        <th class="sortable" data-column="online">Online Income</th>
+                                        <th class="sortable" data-column="total">Total Income</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                </tbody>
+                            </table>
+                            <div class="empty-state hidden" id="emptyState">
+                                <div class="empty-icon">📋</div>
+                                <div class="empty-title">No Data Available</div>
+                                <div class="empty-description">Connect to Google Sheets to load your income data</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Share Modal -->
+    <div class="modal hidden" id="shareModal">
+        <div class="modal-backdrop" id="shareModalBackdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Dashboard</h3>
+                <button class="modal-close" id="closeShareModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="share-info">
+                    <div class="share-section">
+                        <label class="form-label">Dashboard URL:</label>
+                        <div class="url-copy-group">
+                            <input type="text" class="form-control" id="dashboardUrl" readonly>
+                            <button class="btn btn--primary" id="copyUrlBtn">Copy</button>
+                        </div>
+                    </div>
+                    <div class="share-section">
+                        <h4>Google Sheets Integration:</h4>
+                        <div class="access-info">
+                            <div class="access-item">
+                                <strong>Read-Only Access:</strong> Dashboard fetches data from Google Sheets automatically
+                            </div>
+                            <div class="access-item">
+                                <strong>Data Entry:</strong> All data modifications must be done directly in Google Sheets
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <div class="loading-text">Syncing with Google Sheets...</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
