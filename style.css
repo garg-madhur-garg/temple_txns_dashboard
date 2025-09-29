@@ -1061,10 +1061,32 @@ select.form-control {
   flex-wrap: wrap;
 }
 
-.date-picker-group {
+/* Date Range Picker Styles */
+.date-range-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.date-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+}
+
+.date-input-group {
   display: flex;
   align-items: center;
   gap: var(--space-8);
+}
+
+.date-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  min-width: 30px;
 }
 
 .filter-label {
@@ -1076,7 +1098,10 @@ select.form-control {
 
 .form-control--inline {
   width: auto;
-  min-width: 150px;
+  min-width: 120px;
+  max-width: 140px;
+  font-size: var(--font-size-sm);
+  padding: var(--space-6) var(--space-8);
 }
 
 .quick-filters {
@@ -1095,6 +1120,38 @@ select.form-control {
   margin-left: auto;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+}
+
+/* Responsive Design for Date Range */
+@media (max-width: 768px) {
+  .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-12);
+  }
+
+  .filter-info {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .quick-filters {
+    justify-content: center;
+  }
+
+  .date-range-group {
+    align-items: center;
+  }
+
+  .date-range-inputs {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-12);
+  }
+
+  .date-input-group {
+    justify-content: center;
+  }
 }
 
 /* Main Dashboard */
@@ -1205,6 +1262,19 @@ select.form-control {
   box-shadow: var(--shadow-md);
   border: 1px solid var(--color-card-border);
   overflow: hidden;
+}
+
+/* Back button styling for payment chart */
+.back-btn {
+  background: #6c757d !important;
+  color: white !important;
+  border-color: #6c757d !important;
+  margin-right: 0.5rem;
+}
+
+.back-btn:hover {
+  background: #5a6268 !important;
+  border-color: #5a6268 !important;
 }
 
 .chart-header {
@@ -1707,4 +1777,34 @@ select.form-control {
   .setup-content {
     padding: var(--space-16);
   }
+}
+
+/* Label Toggle Styles */
+.label-toggle {
+  display: flex;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-left: 0.5rem;
+}
+
+.label-toggle .btn {
+  border-radius: 0;
+  border-right: 1px solid #dee2e6;
+  font-size: 0.75rem;
+  padding: 0.375rem 0.75rem;
+}
+
+.label-toggle .btn:last-child {
+  border-right: none;
+}
+
+.label-toggle .btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.label-toggle .btn:hover:not(.active) {
+  background: #f8f9fa;
 }

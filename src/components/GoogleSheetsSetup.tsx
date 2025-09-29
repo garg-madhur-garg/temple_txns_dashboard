@@ -19,7 +19,7 @@ export const GoogleSheetsSetup: React.FC<GoogleSheetsSetupProps> = ({
   const [config, setConfig] = useState<GoogleSheetsConfig>({
     apiKey: '',
     spreadsheetId: '',
-    range: 'Sheet2!B:F!B:F',
+    range: 'Sheet1!A:E',
     refreshInterval: 30000
   });
   const [isTesting, setIsTesting] = useState(false);
@@ -119,7 +119,7 @@ export const GoogleSheetsSetup: React.FC<GoogleSheetsSetupProps> = ({
                     id="sheetRange"
                     className={styles.formControl}
                     value={config.range}
-                    placeholder="e.g., Sheet2!B:F!B:F"
+                    placeholder="e.g., Sheet1!A:E"
                     onChange={(e) => handleConfigChange('range', e.target.value)}
                     disabled={connectionState.status === 'connected'}
                   />

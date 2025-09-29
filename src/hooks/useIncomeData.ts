@@ -19,7 +19,7 @@ export const useIncomeData = (): UseIncomeDataReturn => {
       const config: GoogleSheetsConfig = {
         apiKey: 'AIzaSyCndZeCj6CHI3c4aZ0NhllTEbBev6Mg3mg',
         spreadsheetId: '1sIKmerb68mazwhs4DUE3XQK9vvsKxUi7tBD6DPSrrcI',
-        range: 'Sheet2!B:F',
+        range: 'Sheet1!A:E',
         refreshInterval: 30000
       };
       

@@ -1,37 +1,35 @@
 /**
- * DEPARTMENT INCOME DISTRIBUTION CHART - PIE CHART
- * ================================================
+ * DEPARTMENT PERFORMANCE BAR CHART
+ * ===============================
  * 
- * This React component displays department income distribution as a pie chart with
- * filtering capabilities for departments and date ranges.
+ * This React component displays department-wise total income as a horizontal bar chart
+ * with filtering capabilities for departments and date ranges.
  * 
  * Features:
- * - Department income pie chart with percentages in legends
- * - Department and date range filtering
+ * - Horizontal bar chart showing department income
+ * - Department filter with multi-select capability
+ * - Date range filter integration
  * - Interactive chart with hover effects
- * - Fixed size layout with proper spacing
  * - Export functionality
  * 
  * @author Temple Management System
  * @lastUpdated 2025
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { IncomeRecord, ALL_DEPARTMENTS } from '../../types';
 import { dataProcessingService } from '../../services/dataProcessingService';
 import { Chart, registerables } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import styles from './PaymentMethodChart.module.css';
+import styles from './DepartmentPerformanceChart.module.css';
 
 // Register Chart.js components
 Chart.register(...registerables);
-Chart.register(ChartDataLabels);
 
-interface DepartmentIncomeDistributionChartProps {
+interface DepartmentPerformanceChartProps {
   data: IncomeRecord[];
 }
 
-export const DepartmentIncomeDistributionChart: React.FC<DepartmentIncomeDistributionChartProps> = ({ data }) => {
+export const DepartmentPerformanceChart: React.FC<DepartmentPerformanceChartProps> = ({ data }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<any>(null);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
@@ -81,7 +79,7 @@ export const DepartmentIncomeDistributionChart: React.FC<DepartmentIncomeDistrib
   /**
    * Process data based on selected filters
    */
-  const processData = () => {
+  const processData = useCallback(() => {
     let filteredData = [...data];
 
     // Apply date range filter
@@ -138,12 +136,12 @@ export const DepartmentIncomeDistributionChart: React.FC<DepartmentIncomeDistrib
       onlineData: departmentTotals.map(d => d.online),
       departments: departmentTotals
     };
-  };
+  }, [data, selectedDepartments, dateRange]);
 
   /**
-   * Create the pie chart
+   * Create the horizontal bar chart
    */
-  const createChart = () => {
+  const createChart = useCallback(() => {
     if (!chartRef.current) return;
 
     const ctx = chartRef.current.getContext('2d');
@@ -169,88 +167,73 @@ export const DepartmentIncomeDistributionChart: React.FC<DepartmentIncomeDistrib
     ];
 
     chartInstanceRef.current = new Chart(ctx, {
-      type: 'pie',
+      type: 'bar',
       data: {
         labels: chartData.labels,
         datasets: [{
+          label: 'Total Income',
           data: chartData.data,
           backgroundColor: colors.slice(0, chartData.labels.length),
-          borderWidth: 2,
-          borderColor: '#fff',
-          hoverBorderWidth: 3,
-          hoverBorderColor: '#333'
+          borderColor: colors.slice(0, chartData.labels.length).map(color => color + '80'),
+          borderWidth: 1,
+          borderRadius: 4,
+          borderSkipped: false,
         }]
       },
       options: {
+        indexAxis: 'y', // Horizontal bar chart
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: true,
-            position: 'bottom',
-            align: 'center',
-            maxHeight: 60,
-            labels: {
-              padding: 15,
-              usePointStyle: true,
-              font: {
-                size: 10
-              },
-              boxWidth: 8,
-              boxHeight: 8,
-              textAlign: 'center',
-              generateLabels: (chart: any) => {
-                const data = chart.data;
-                if (data.labels.length && data.datasets.length) {
-                  const dataset = data.datasets[0];
-                  const total = dataset.data.reduce((a: number, b: number) => a + b, 0);
-                  
-                  return data.labels.map((label: string, index: number) => {
-                    const value = dataset.data[index];
-                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
-                    
-                    return {
-                      text: `${label} (${percentage}%)`,
-                      fillStyle: dataset.backgroundColor[index],
-                      strokeStyle: dataset.borderColor,
-                      lineWidth: dataset.borderWidth,
-                      pointStyle: 'circle',
-                      hidden: false,
-                      index: index
-                    };
-                  });
-                }
-                return [];
-              }
-            }
-          },
-          datalabels: {
-            display: false // Disable percentage labels on pie slices
+            display: false
           },
           tooltip: {
             callbacks: {
               label: function(context: any) {
-                const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
-                const percentage = ((context.parsed / total) * 100).toFixed(1);
-                
-                // Show separate cash and online income for departments
                 const department = chartData.departments[context.dataIndex];
                 if (department) {
                   return [
-                    `${context.label}: ${dataProcessingService.formatCurrency(context.parsed)} (${percentage}%)`,
-                    `  Cash: ${dataProcessingService.formatCurrency(department.cash)}`,
-                    `  Online: ${dataProcessingService.formatCurrency(department.online)}`
+                    `Total: ${dataProcessingService.formatCurrency(context.parsed.x)}`,
+                    `Cash: ${dataProcessingService.formatCurrency(department.cash)}`,
+                    `Online: ${dataProcessingService.formatCurrency(department.online)}`
                   ];
                 }
-                
-                return `${context.label}: ${dataProcessingService.formatCurrency(context.parsed)} (${percentage}%)`;
+                return `${context.label}: ${dataProcessingService.formatCurrency(context.parsed.x)}`;
               }
             }
           }
         },
+        scales: {
+            x: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value: any) {
+                  return dataProcessingService.formatCurrency(Number(value.toFixed(2)));
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              }
+            },
+          y: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              font: {
+                size: 12
+              }
+            }
+          }
+        },
+        animation: {
+          duration: 1000,
+          easing: 'easeInOutQuart'
+        }
       }
     });
-  };
+  }, [processData]);
 
 
   /**
@@ -281,15 +264,16 @@ export const DepartmentIncomeDistributionChart: React.FC<DepartmentIncomeDistrib
     setSelectedPeriod('');
   };
 
+
   // Create chart when data or filters change
   useEffect(() => {
     createChart();
-  }, [data, selectedDepartments, dateRange]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [createChart]);
 
   return (
     <div className={styles.chartCard}>
       <div className={styles.cardHeader}>
-        <h3>Department Income Distribution</h3>
+        <h3>Department Performance</h3>
         <div className={styles.headerActions}>
           <button 
             className={`${styles.btn} ${styles.btnOutline} ${styles.btnSm} ${styles.filterToggleBtn}`}

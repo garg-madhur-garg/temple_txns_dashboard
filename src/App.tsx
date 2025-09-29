@@ -5,6 +5,7 @@ import { KPISection } from './components/KPISection';
 import { DepartmentsSection } from './components/DepartmentsSection';
 import { ChartsSection } from './components/ChartsSection';
 import { AnalyticsSection } from './components/AnalyticsSection';
+import { BankDetailsSection } from './components/BankDetailsSection';
 import { DataTableSection } from './components/DataTableSection';
 import { ShareModal } from './components/ShareModal';
 import { LoadingOverlay } from './components/LoadingOverlay';
@@ -14,13 +15,27 @@ import { useIncomeData } from './hooks/useIncomeData';
 import { useFilters } from './hooks/useFilters';
 import { useConnection } from './hooks/useConnection';
 import { useMessages } from './hooks/useMessages';
+import { useBankDetails } from './hooks/useBankDetails';
+import { bankDetailsConfig } from './config/bankDetailsConfig';
 import styles from './App.module.css';
+
+/**
+ * MAIN APP COMPONENT - ENHANCED WITH DATE RANGE SUPPORT
+ * =====================================================
+ * 
+ * Main React component for the Temple Transactions Dashboard.
+ * Enhanced to support date range filtering functionality.
+ * 
+ * @author Temple Management System
+ * @lastUpdated 2025
+ */
 
 function App() {
   const { data, loading, refresh } = useIncomeData();
-  const { currentFilter, setFilter, filteredData } = useFilters(data);
+  const { currentFilter, setFilter, setDateRange, filteredData } = useFilters(data);
   const { connectionState, connect, disconnect, sync } = useConnection();
   const { messages, addMessage, removeMessage } = useMessages();
+  const { data: bankDetails, loading: bankLoading } = useBankDetails(bankDetailsConfig);
 
   // Auto-connect to Google Sheets on app load
   useEffect(() => {
@@ -29,7 +44,7 @@ function App() {
         const config = {
           apiKey: 'AIzaSyCndZeCj6CHI3c4aZ0NhllTEbBev6Mg3mg',
           spreadsheetId: '1sIKmerb68mazwhs4DUE3XQK9vvsKxUi7tBD6DPSrrcI',
-          range: 'Sheet2!B:F',
+          range: 'Sheet1!A:E',
           refreshInterval: 30000
         };
         await connect(config);
@@ -73,6 +88,7 @@ function App() {
         <DateFilterBar 
           currentFilter={currentFilter}
           onFilterChange={setFilter}
+          onDateRangeChange={setDateRange}
           dataCount={filteredData.length}
         />
         
@@ -82,12 +98,13 @@ function App() {
             <DepartmentsSection data={filteredData} />
             <ChartsSection data={filteredData} />
             <AnalyticsSection data={filteredData} />
+            <BankDetailsSection data={bankDetails} />
             <DataTableSection data={filteredData} />
           </div>
         </main>
         
         <ShareModal />
-        <LoadingOverlay visible={loading} />
+        <LoadingOverlay visible={loading || bankLoading} />
         <MessageContainer messages={messages} onRemove={removeMessage} />
       </div>
     </ThemeProvider>

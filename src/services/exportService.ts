@@ -31,6 +31,39 @@ export class ExportService {
   }
 
   /**
+   * Export generic data to CSV format
+   */
+  exportGenericToCSV(data: any[], filename: string): void {
+    if (data.length === 0) {
+      throw new Error('No data to export');
+    }
+    
+    // Get headers from the first object
+    const headers = Object.keys(data[0]);
+    const csvContent = [
+      headers.join(','),
+      ...data.map(record => 
+        headers.map(header => {
+          const value = record[header];
+          // Quote strings that contain commas or quotes
+          if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+            return `"${value.replace(/"/g, '""')}"`;
+          }
+          return value;
+        }).join(',')
+      )
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  /**
    * Export chart as image
    */
   exportChartAsImage(canvas: HTMLCanvasElement, filename: string): void {

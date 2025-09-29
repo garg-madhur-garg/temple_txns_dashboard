@@ -1,4 +1,4 @@
-import { GoogleSheetsConfig, IncomeRecord, GoogleSheetsService } from '../types';
+import { GoogleSheetsConfig, IncomeRecord, GoogleSheetsService, BankDetailsConfig, BankDetails } from '../types';
 
 export class GoogleSheetsServiceImpl implements GoogleSheetsService {
   /**
@@ -165,6 +165,55 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
     }
     
     return errors;
+  }
+
+  /**
+   * Fetch bank details from Google Sheets
+   */
+  async fetchBankDetails(config: BankDetailsConfig): Promise<BankDetails[]> {
+    try {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/${config.range}?key=${config.apiKey}`;
+      
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!data.values || data.values.length === 0) {
+        return [];
+      }
+      
+      // Skip header row and process data
+      const rows = data.values.slice(1);
+      
+      return rows.map((row: any[], index: number) => {
+        // Ensure we have at least 7 columns
+        const paddedRow = [...row, '', '', '', '', '', '', ''];
+        
+        // Debug logging for balance parsing
+        const rawBalance = paddedRow[5];
+        const cleanedBalance = (rawBalance || '0').replace(/[^\d.-]/g, '');
+        const parsedBalance = parseFloat(cleanedBalance) || 0;
+        
+        console.log(`Row ${index}: Raw balance: "${rawBalance}", Cleaned: "${cleanedBalance}", Parsed: ${parsedBalance}`);
+        
+        return {
+          bankDetails: paddedRow[0] || '',
+          ifscCode: paddedRow[1] || '',
+          upiIds: paddedRow[2] ? paddedRow[2].split(',').map((id: string) => id.trim()) : [],
+          accountHolderName: paddedRow[3] || '',
+          mainPurpose: paddedRow[4] || '',
+          currentBalance: parsedBalance,
+          accountNumber: paddedRow[6] || ''
+        };
+      });
+    } catch (error) {
+      console.error('Error fetching bank details:', error);
+      throw error;
+    }
   }
 
   /**
