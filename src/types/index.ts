@@ -252,14 +252,14 @@ export interface Message {
 // - Govindas Res -> Govindas (simplified name)
 // - Govindas Stall -> Vrinda's Food Court (new name)
 // - Snacks Shop -> Gopal's Sweet Shop (new name)
-// Priority order: Govindas, Vrinda's Food Court, Gopal's Sweet Shop, Seva Office at top
+// New priority order: Guest House, Govindas, Vrinda's Food Court, Seva Office, Gift Shop, Gopal's Sweet Shop, Railway Book Stall, Kitchen
 export const ALL_DEPARTMENTS = [
+  "Guest House",                 // Accommodation services
   "Govindas",                    // Main restaurant (formerly Govindas Res)
   "Vrinda's Food Court",         // Food court (formerly Govindas Stall)
-  "Gopal's Sweet Shop",          // Sweet shop (formerly Snacks Shop)
   "Seva Office",                 // Administrative office
-  "Guest House",                 // Accommodation services
   "Gift Shop",                   // Retail merchandise
+  "Gopal's Sweet Shop",          // Sweet shop (formerly Snacks Shop)
   "Railway Book Stall",          // Book sales
   "Kitchen"                      // Food preparation (currently inactive)
 ] as const;

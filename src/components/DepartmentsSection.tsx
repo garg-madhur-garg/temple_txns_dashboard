@@ -47,16 +47,6 @@ export const DepartmentsSection: React.FC<DepartmentsSectionProps> = ({ data }) 
       <div className={styles.card}>
         <div className={styles.cardHeader}>
           <h3 id="departments-heading">Department Overview</h3>
-          <div className={styles.departmentLegend} role="group" aria-label="Department status legend">
-            <span className={styles.legendItem}>
-              <span className={`${styles.legendDot} ${styles.active}`} aria-hidden="true"></span>
-              Has Data
-            </span>
-            <span className={styles.legendItem}>
-              <span className={`${styles.legendDot} ${styles.inactive}`} aria-hidden="true"></span>
-              No Data
-            </span>
-          </div>
         </div>
         <div className={styles.cardBody}>
           <div className={styles.departmentsGrid}>

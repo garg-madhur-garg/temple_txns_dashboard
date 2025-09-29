@@ -16,7 +16,7 @@ export const KPISection: React.FC<KPISectionProps> = ({ data }) => {
       <h2 id="kpi-heading" className="sr-only">Key Performance Indicators</h2>
       <div className={styles.kpiGrid}>
         <KPICard
-          icon="₹"
+          icon="💰"
           value={dataProcessingService.formatCurrency(kpis.totalRevenue)}
           label="Total Revenue"
           growth="--"
