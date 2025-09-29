@@ -93,6 +93,11 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const startOfYear = new Date(today.getFullYear(), 0, 1);
     
+    // Get the last day of the current month
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    // Get the last day of the current year
+    const endOfYear = new Date(today.getFullYear(), 11, 31);
+    
     // Format date to YYYY-MM-DD
     const formatDate = (date: Date): string => {
       const year = date.getFullYear();
@@ -109,9 +114,9 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
       case 'week':
         return { start: formatDate(startOfWeek), end: formatDate(endOfWeek) };
       case 'month':
-        return { start: formatDate(startOfMonth), end: formatDate(today) };
+        return { start: formatDate(startOfMonth), end: formatDate(endOfMonth) };
       case 'year':
-        return { start: formatDate(startOfYear), end: formatDate(today) };
+        return { start: formatDate(startOfYear), end: formatDate(endOfYear) };
       default:
         return null;
     }

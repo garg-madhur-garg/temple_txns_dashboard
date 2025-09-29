@@ -205,9 +205,13 @@ export class DataProcessingService {
         endOfWeek.setDate(startOfWeek.getDate() + 6);
         return { start: startOfWeek, end: endOfWeek };
       case 'month':
-        return { start: startOfMonth, end: today };
+        // Get the last day of the current month
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        return { start: startOfMonth, end: endOfMonth };
       case 'year':
-        return { start: startOfYear, end: today };
+        // Get the last day of the current year
+        const endOfYear = new Date(today.getFullYear(), 11, 31);
+        return { start: startOfYear, end: endOfYear };
       default:
         return null;
     }
