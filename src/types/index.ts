@@ -126,7 +126,7 @@ export interface ConnectionState {
 }
 
 // Filter types
-export type DateFilter = 'all' | 'today' | 'yesterday' | 'week' | 'month' | 'year' | 'specific';
+export type DateFilter = 'all' | 'yesterday' | 'week' | 'month' | 'year' | 'specific';
 
 /**
  * Date Range Interface

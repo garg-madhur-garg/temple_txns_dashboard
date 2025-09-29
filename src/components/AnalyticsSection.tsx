@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { IncomeRecord } from '../types';
 import { dataProcessingService } from '../services/dataProcessingService';
 import styles from './AnalyticsSection.module.css';
@@ -7,33 +7,103 @@ interface AnalyticsSectionProps {
   data: IncomeRecord[];
 }
 
-type ViewPeriod = 'daily' | 'monthly' | 'yearly';
+type ViewPeriod = 'monthly' | 'yearly';
 
 export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ data }) => {
-  const [viewPeriod, setViewPeriod] = useState<ViewPeriod>('daily');
-  const analytics = dataProcessingService.calculateAnalytics(data);
+  const [viewPeriod, setViewPeriod] = useState<ViewPeriod>('monthly');
+
+  /**
+   * Filter data based on the selected view period
+   */
+  const filteredData = useMemo(() => {
+    if (data.length === 0) return [];
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    return data.filter(record => {
+      const [month, day, year] = record.date.split('/').map(num => parseInt(num, 10));
+      const recordDate = new Date(year, month - 1, day);
+
+      switch (viewPeriod) {
+        case 'monthly':
+          return recordDate.getFullYear() === currentYear && recordDate.getMonth() === currentMonth;
+        case 'yearly':
+          return recordDate.getFullYear() === currentYear;
+        default:
+          return true;
+      }
+    });
+  }, [data, viewPeriod]);
+
+  const analytics = dataProcessingService.calculateAnalytics(filteredData);
+
+  /**
+   * Get the date range for the current view period based on selected period
+   */
+  const dateRange = useMemo(() => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    
+    const formatDate = (date: Date): string => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    switch (viewPeriod) {
+      case 'monthly':
+        // Show current month's date range
+        const startOfMonth = new Date(currentYear, currentMonth, 1);
+        const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
+        return {
+          start: formatDate(startOfMonth),
+          end: formatDate(endOfMonth)
+        };
+      
+      case 'yearly':
+        // Show current year's date range
+        const startOfYear = new Date(currentYear, 0, 1);
+        const endOfYear = new Date(currentYear, 11, 31);
+        return {
+          start: formatDate(startOfYear),
+          end: formatDate(endOfYear)
+        };
+      
+      default:
+        return { start: '--', end: '--' };
+    }
+  }, [viewPeriod]);
 
   const getAverageRevenue = () => {
+    if (filteredData.length === 0) return 0;
+
+    const totalRevenue = filteredData.reduce((sum, record) => sum + record.cash + record.online, 0);
+    
     switch (viewPeriod) {
-      case 'daily':
-        return analytics.avgDailyRevenue;
       case 'monthly':
-        return analytics.avgMonthlyRevenue;
+        // For monthly view, calculate average per day in the current month
+        const currentMonthDays = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+        return totalRevenue / currentMonthDays;
       case 'yearly':
-        return analytics.avgYearlyRevenue;
+        // For yearly view, calculate average per day in the current year
+        const currentYearDays = new Date(new Date().getFullYear(), 11, 31).getTime() - new Date(new Date().getFullYear(), 0, 1).getTime();
+        const daysInYear = Math.ceil(currentYearDays / (1000 * 60 * 60 * 24));
+        return totalRevenue / daysInYear;
       default:
-        return analytics.avgDailyRevenue;
+        return totalRevenue;
     }
   };
 
   const getAverageLabel = () => {
     switch (viewPeriod) {
-      case 'daily':
-        return 'Average Daily Revenue';
       case 'monthly':
-        return 'Average Monthly Revenue';
+        return 'Average Daily Revenue (This Month)';
       case 'yearly':
-        return 'Average Yearly Revenue';
+        return 'Average Daily Revenue (This Year)';
       default:
         return 'Average Daily Revenue';
     }
@@ -45,15 +115,18 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ data }) => {
       <div className={styles.analyticsGrid}>
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <h3>Performance Insights</h3>
+            <div className={styles.headerLeft}>
+              <h3>Performance Insights</h3>
+              <div className={styles.dateRangeInline}>
+                <span className={styles.dateRangeLabel}>
+                  {viewPeriod === 'monthly' ? 'Current Month:' : 'Current Year:'}
+                </span>
+                <span className={styles.dateRangeValue}>
+                  {dateRange.start} to {dateRange.end}
+                </span>
+              </div>
+            </div>
             <div className={styles.viewSwitcher}>
-              <button
-                className={`${styles.viewBtn} ${viewPeriod === 'daily' ? styles.viewBtnActive : ''}`}
-                onClick={() => setViewPeriod('daily')}
-                aria-label="Switch to daily view"
-              >
-                Daily
-              </button>
               <button
                 className={`${styles.viewBtn} ${viewPeriod === 'monthly' ? styles.viewBtnActive : ''}`}
                 onClick={() => setViewPeriod('monthly')}

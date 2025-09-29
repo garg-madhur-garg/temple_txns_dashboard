@@ -40,7 +40,6 @@ interface DateFilterBarProps {
  */
 const FILTER_LABELS: Record<DateFilter, string> = {
   all: 'All Time',
-  today: 'Today',
   yesterday: 'Yesterday',
   week: 'This Week',
   month: 'This Month',
@@ -107,8 +106,6 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
     };
     
     switch (filter) {
-      case 'today':
-        return { start: formatDate(today), end: formatDate(today) };
       case 'yesterday':
         return { start: formatDate(yesterday), end: formatDate(yesterday) };
       case 'week':
@@ -227,7 +224,6 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
     }
     
     const filterLabels: Record<DateFilter, string> = {
-      'today': 'today',
       'yesterday': 'yesterday',
       'week': 'this week',
       'month': 'this month',
@@ -294,7 +290,7 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
           </div>
           
           <div className={styles.quickFilters} role="group" aria-label="Quick date filters">
-            {(['all', 'today', 'yesterday', 'week', 'month', 'year'] as DateFilter[]).map((filter) => (
+            {(['all', 'yesterday', 'week', 'month', 'year'] as DateFilter[]).map((filter) => (
               <button
                 key={filter}
                 className={`${styles.btn} ${styles.btnOutline} ${styles.btnSm} ${styles.filterBtn} ${

@@ -89,17 +89,30 @@ export class DataProcessingService {
       (totalCash + totalOnline) / uniqueDates.length : 0;
     
     // Calculate average monthly revenue
-    const uniqueMonths = new Set(data.map(record => {
+    const monthlyRevenue: Record<string, number> = {};
+    data.forEach(record => {
       const [month, day, year] = record.date.split('/').map(num => parseInt(num, 10));
-      return `${year}-${month.toString().padStart(2, '0')}`;
-    })).size;
+      const monthKey = `${year}-${month.toString().padStart(2, '0')}`;
+      if (!monthlyRevenue[monthKey]) {
+        monthlyRevenue[monthKey] = 0;
+      }
+      monthlyRevenue[monthKey] += record.cash + record.online;
+    });
+    
+    const uniqueMonths = Object.keys(monthlyRevenue).length;
     const avgMonthly = uniqueMonths > 0 ? (totalCash + totalOnline) / uniqueMonths : 0;
 
     // Calculate average yearly revenue
-    const uniqueYears = new Set(data.map(record => {
+    const yearlyRevenue: Record<string, number> = {};
+    data.forEach(record => {
       const [month, day, year] = record.date.split('/').map(num => parseInt(num, 10));
-      return year;
-    })).size;
+      if (!yearlyRevenue[year.toString()]) {
+        yearlyRevenue[year.toString()] = 0;
+      }
+      yearlyRevenue[year.toString()] += record.cash + record.online;
+    });
+    
+    const uniqueYears = Object.keys(yearlyRevenue).length;
     const avgYearly = uniqueYears > 0 ? (totalCash + totalOnline) / uniqueYears : 0;
 
     return {
@@ -195,8 +208,6 @@ export class DataProcessingService {
     const startOfYear = new Date(today.getFullYear(), 0, 1);
     
     switch (filter) {
-      case 'today':
-        return { start: today, end: today };
       case 'yesterday':
         return { start: yesterday, end: yesterday };
       case 'week':

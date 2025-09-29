@@ -97,7 +97,7 @@ function App() {
             <KPISection data={filteredData} />
             <DepartmentsSection data={filteredData} />
             <ChartsSection data={filteredData} />
-            <AnalyticsSection data={filteredData} />
+            <AnalyticsSection data={data} />
             <BankDetailsSection data={bankDetails} />
             <DataTableSection data={filteredData} />
           </div>
