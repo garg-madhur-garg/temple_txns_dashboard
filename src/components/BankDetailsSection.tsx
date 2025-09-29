@@ -109,7 +109,6 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
                         <div className={styles.balanceCell}>
                           {(() => {
                             const balance = bankDetails.currentBalance;
-                            console.log('Displaying balance:', balance, 'Type:', typeof balance);
                             if (balance !== undefined && balance !== null && !isNaN(Number(balance))) {
                               return dataProcessingService.formatCurrency(Number(balance));
                             }

@@ -1,5 +1,5 @@
 .bankDetailsSection {
-  margin-bottom: var(--space-32);
+  margin-bottom: var(--space-16);
 }
 
 .card {
@@ -16,7 +16,7 @@
 }
 
 .cardHeader {
-  padding: var(--space-16);
+  padding: var(--space-12);
   border-bottom: 1px solid var(--color-card-border-inner);
   display: flex;
   justify-content: space-between;
@@ -25,7 +25,7 @@
 
 .cardHeader h3 {
   margin: 0;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   color: var(--color-text);
 }
 
@@ -41,7 +41,7 @@
 }
 
 .cardBody {
-  padding: var(--space-16);
+  padding: var(--space-12);
 }
 
 .tableContainer {
@@ -58,12 +58,12 @@
 .dataTable {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
 }
 
 .dataTable th,
 .dataTable td {
-  padding: var(--space-12) var(--space-16);
+  padding: var(--space-8) var(--space-12);
   text-align: left;
   border-bottom: 1px solid var(--color-card-border-inner);
   vertical-align: top;
@@ -154,8 +154,9 @@
 .bankDetailsCell {
   font-weight: 500;
   color: var(--color-text);
-  max-width: 200px;
+  max-width: 150px;
   word-wrap: break-word;
+  font-size: var(--font-size-xs);
 }
 
 .ifscCell {
@@ -170,31 +171,31 @@
   font-family: var(--font-family-mono);
   font-weight: 600;
   color: var(--color-text);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   white-space: nowrap;
-  min-width: 120px;
+  min-width: 100px;
 }
 
 .upiCell {
-  max-width: 300px;
-  min-width: 200px;
+  max-width: 200px;
+  min-width: 150px;
 }
 
 .upiList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
   width: 100%;
 }
 
 .upiItem {
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-text);
   word-break: break-all;
   display: block;
   text-align: left;
-  line-height: 1.4;
+  line-height: 1.2;
 }
 
 .noData {
@@ -205,15 +206,17 @@
 .accountHolderCell {
   font-weight: 500;
   color: var(--color-text);
-  max-width: 150px;
+  max-width: 120px;
   word-wrap: break-word;
+  font-size: var(--font-size-xs);
 }
 
 .purposeCell {
   color: var(--color-text);
-  max-width: 200px;
+  max-width: 150px;
   word-wrap: break-word;
   font-style: italic;
+  font-size: var(--font-size-xs);
 }
 
 .balanceCell {
@@ -221,7 +224,7 @@
   color: var(--color-success);
   text-align: right;
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   white-space: nowrap;
 }
 
@@ -230,18 +233,18 @@
   flex-direction: column;
   gap: var(--space-4);
   align-items: center;
-  min-width: 120px;
+  min-width: 100px;
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-8) var(--space-16);
+  padding: var(--space-6) var(--space-12);
   border-radius: var(--radius-base);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-xs);
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.4;
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-standard);
   border: none;
@@ -275,8 +278,8 @@
 }
 
 .btnSm {
-  padding: var(--space-4) var(--space-12);
-  font-size: var(--font-size-sm);
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-xs);
   border-radius: var(--radius-sm);
 }
 
@@ -287,38 +290,38 @@
 
 .emptyState {
   text-align: center;
-  padding: var(--space-32);
+  padding: var(--space-20);
   color: var(--color-text-secondary);
 }
 
 .emptyIcon {
-  font-size: var(--font-size-4xl);
-  margin-bottom: var(--space-16);
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--space-12);
   opacity: 0.5;
 }
 
 .emptyTitle {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
   color: var(--color-text);
 }
 
 .emptyDescription {
-  font-size: var(--font-size-base);
-  line-height: 1.5;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
   .bankDetailsCell,
   .purposeCell {
-    max-width: 150px;
+    max-width: 120px;
   }
   
   .upiCell {
-    max-width: 250px;
-    min-width: 180px;
+    max-width: 180px;
+    min-width: 140px;
   }
   
   .ifscCell {
@@ -334,49 +337,7 @@
   .tableControls {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-8);
-  }
-  
-  .bankDetailsCell,
-  .purposeCell {
-    max-width: 120px;
-  }
-  
-  .upiCell {
-    max-width: 200px;
-    min-width: 150px;
-  }
-  
-  .upiItem {
-    font-size: var(--font-size-xs);
-  }
-  
-  .ifscCell {
-    font-size: var(--font-size-xs);
-  }
-  
-  .balanceCell {
-    font-size: var(--font-size-xs);
-  }
-  
-  .actionsCell {
-    min-width: 100px;
-  }
-  
-  .btn {
-    padding: var(--space-4) var(--space-8);
-    font-size: var(--font-size-xs);
-  }
-}
-
-@media (max-width: 480px) {
-  .dataTable {
-    font-size: var(--font-size-xs);
-  }
-  
-  .dataTable th,
-  .dataTable td {
-    padding: var(--space-6) var(--space-8);
+    gap: var(--space-6);
   }
   
   .bankDetailsCell,
@@ -407,6 +368,48 @@
   
   .btn {
     padding: var(--space-3) var(--space-6);
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .dataTable {
+    font-size: var(--font-size-xs);
+  }
+  
+  .dataTable th,
+  .dataTable td {
+    padding: var(--space-4) var(--space-6);
+  }
+  
+  .bankDetailsCell,
+  .purposeCell {
+    max-width: 80px;
+  }
+  
+  .upiCell {
+    max-width: 120px;
+    min-width: 100px;
+  }
+  
+  .upiItem {
+    font-size: var(--font-size-xs);
+  }
+  
+  .ifscCell {
+    font-size: var(--font-size-xs);
+  }
+  
+  .balanceCell {
+    font-size: var(--font-size-xs);
+  }
+  
+  .actionsCell {
+    min-width: 70px;
+  }
+  
+  .btn {
+    padding: var(--space-2) var(--space-4);
     font-size: var(--font-size-xs);
   }
 }
