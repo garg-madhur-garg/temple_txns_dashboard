@@ -266,18 +266,20 @@
 .balanceCell {
   font-weight: 600;
   color: var(--color-success);
-  text-align: right;
+  text-align: left;
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-lg);
   white-space: nowrap;
+  padding-left: 0;
 }
 
 .actionsCell {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  align-items: center;
+  align-items: flex-start;
   min-width: 100px;
+  padding-left: 0;
 }
 
 .btn {
@@ -373,7 +375,7 @@
   }
   
   .balanceCell {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
   }
 }
 
@@ -423,11 +425,12 @@
   }
   
   .balanceCell {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
   }
   
   .actionsCell {
     min-width: 80px;
+    padding-left: 0;
   }
   
   .btn {
@@ -470,6 +473,7 @@
   
   .actionsCell {
     min-width: 70px;
+    padding-left: 0;
   }
   
   .btn {

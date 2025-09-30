@@ -128,7 +128,6 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
                   <tr>
                     <th className={styles.headerCell} scope="col">Bank Details</th>
                     <th className={styles.headerCell} scope="col">IFSC Code</th>
-                    <th className={styles.headerCell} scope="col">Account Number</th>
                     <th className={styles.headerCell} scope="col">UPI IDs</th>
                     <th className={styles.headerCell} scope="col">Account Holder</th>
                     <th className={styles.headerCell} scope="col">Main Purpose</th>
@@ -147,11 +146,6 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
                       <td className={styles.dataCell}>
                         <div className={styles.ifscCell}>
                           {bankDetails.ifscCode}
-                        </div>
-                      </td>
-                      <td className={styles.dataCell}>
-                        <div className={styles.accountNumberCell}>
-                          {bankDetails.accountNumber}
                         </div>
                       </td>
                       <td className={styles.dataCell}>
