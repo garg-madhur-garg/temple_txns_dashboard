@@ -94,7 +94,7 @@ function App() {
         
         <main className={styles.dashboardMain}>
           <div className={styles.container}>
-            <KPISection data={filteredData} />
+            <KPISection data={filteredData} bankDetails={bankDetails} />
             <DepartmentsSection data={filteredData} />
             <ChartsSection data={filteredData} />
             <AnalyticsSection data={data} />

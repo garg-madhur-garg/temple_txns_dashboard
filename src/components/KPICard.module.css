@@ -26,7 +26,7 @@
 
 .value {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: bold;
   color: #333;
   line-height: 1.2;
 }
@@ -40,6 +40,7 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
+  font-style: italic;
   color: #666;
   text-transform: uppercase;
   letter-spacing: 0.025em;
@@ -53,7 +54,7 @@
 
 .growth {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: bold;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   display: inline-block;

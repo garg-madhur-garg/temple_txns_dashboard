@@ -29,6 +29,27 @@
   color: var(--color-text);
 }
 
+.totalBalanceSummary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.totalBalanceLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.totalBalanceValue {
+  font-size: var(--font-size-base);
+  font-weight: bold;
+  color: var(--color-success);
+  font-family: var(--font-family-mono);
+}
+
 .tableControls {
   display: flex;
   align-items: center;
@@ -58,7 +79,7 @@
 .dataTable {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 }
 
 .dataTable th,
@@ -156,14 +177,14 @@
   color: var(--color-text);
   max-width: 150px;
   word-wrap: break-word;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 }
 
 .ifscCell {
   font-family: var(--font-family-mono);
   font-weight: 600;
   color: var(--color-primary);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   white-space: nowrap;
 }
 
@@ -171,7 +192,7 @@
   font-family: var(--font-family-mono);
   font-weight: 600;
   color: var(--color-text);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   white-space: nowrap;
   min-width: 100px;
 }
@@ -190,7 +211,7 @@
 
 .upiItem {
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--color-text);
   word-break: break-all;
   display: block;
@@ -208,7 +229,7 @@
   color: var(--color-text);
   max-width: 120px;
   word-wrap: break-word;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 }
 
 .purposeCell {
@@ -216,7 +237,7 @@
   max-width: 150px;
   word-wrap: break-word;
   font-style: italic;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 }
 
 .balanceCell {
@@ -224,7 +245,7 @@
   color: var(--color-success);
   text-align: right;
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   white-space: nowrap;
 }
 
@@ -325,15 +346,31 @@
   }
   
   .ifscCell {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
   }
   
   .balanceCell {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
   }
 }
 
 @media (max-width: 768px) {
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+  }
+  
+  .totalBalanceSummary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  
+  .totalBalanceValue {
+    font-size: var(--font-size-sm);
+  }
+  
   .tableControls {
     flex-direction: column;
     align-items: flex-start;
@@ -351,15 +388,15 @@
   }
   
   .upiItem {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
   }
   
   .ifscCell {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
   }
   
   .balanceCell {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
   }
   
   .actionsCell {
@@ -393,15 +430,15 @@
   }
   
   .upiItem {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
   }
   
   .ifscCell {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
   }
   
   .balanceCell {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
   }
   
   .actionsCell {

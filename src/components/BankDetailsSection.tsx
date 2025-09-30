@@ -10,6 +10,15 @@ interface BankDetailsSectionProps {
 
 export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) => {
   const { addMessage } = useMessages();
+  
+  // Calculate total current balance from all bank accounts
+  const totalCurrentBalance = data.reduce((total, bank) => {
+    const balance = bank.currentBalance;
+    if (balance !== undefined && balance !== null && !isNaN(Number(balance))) {
+      return total + Number(balance);
+    }
+    return total;
+  }, 0);
 
   const handleCopyDetails = (bankDetails: BankDetails) => {
     const detailsText = [
@@ -31,7 +40,15 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
     <section className={styles.bankDetailsSection} aria-labelledby="bank-details-heading">
       <div className={styles.card}>
         <div className={styles.cardHeader}>
-          <h3 id="bank-details-heading">Bank Details (From Google Sheets)</h3>
+          <div>
+            <h3 id="bank-details-heading">Bank Details (From Google Sheets)</h3>
+            <div className={styles.totalBalanceSummary}>
+              <span className={styles.totalBalanceLabel}>Total Current Balance:</span>
+              <span className={styles.totalBalanceValue}>
+                {dataProcessingService.formatCurrency(totalCurrentBalance)}
+              </span>
+            </div>
+          </div>
           <div className={styles.tableControls}>
             <span className={styles.recordCount} aria-live="polite">
               {data.length} bank{data.length !== 1 ? 's' : ''}
