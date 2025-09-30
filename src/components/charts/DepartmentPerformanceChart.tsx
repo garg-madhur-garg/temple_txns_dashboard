@@ -1,15 +1,15 @@
 /**
- * DAILY TREND CHART - LINE CHART
- * ==============================
+ * DEPARTMENT PERFORMANCE BAR CHART
+ * ===============================
  * 
- * This React component displays daily income trends as a smooth line chart with
- * filtering capabilities for departments and date ranges.
+ * This React component displays department-wise total income as a horizontal bar chart
+ * with filtering capabilities for departments and date ranges.
  * 
  * Features:
- * - Daily income trend line chart with smooth curves
- * - Department and date range filtering
+ * - Horizontal bar chart showing department income
+ * - Department filter with multi-select capability
+ * - Date range filter integration
  * - Interactive chart with hover effects
- * - Fixed size layout with proper spacing
  * - Export functionality
  * 
  * @author Temple Management System
@@ -20,16 +20,16 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { IncomeRecord, ALL_DEPARTMENTS } from '../../types';
 import { dataProcessingService } from '../../services/dataProcessingService';
 import { Chart, registerables } from 'chart.js';
-import styles from './DailyTrendChart.module.css';
+import styles from './DepartmentPerformanceChart.module.css';
 
 // Register Chart.js components
 Chart.register(...registerables);
 
-interface DailyTrendChartProps {
+interface DepartmentPerformanceChartProps {
   data: IncomeRecord[];
 }
 
-export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
+export const DepartmentPerformanceChart: React.FC<DepartmentPerformanceChartProps> = ({ data }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<any>(null);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
@@ -110,34 +110,36 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
     }
     // If no departments selected, show all departments (no filtering)
 
-    // Group data by date
-    const dailyData: Record<string, { cash: number; online: number; total: number }> = {};
-    filteredData.forEach(record => {
-      if (!dailyData[record.date]) {
-        dailyData[record.date] = { cash: 0, online: 0, total: 0 };
-      }
-      dailyData[record.date].cash += record.cash;
-      dailyData[record.date].online += record.online;
-      dailyData[record.date].total += record.cash + record.online;
-    });
+    // Calculate department totals
+    const departmentTotals = ALL_DEPARTMENTS.map(dept => {
+      const deptData = filteredData.filter(record => record.department === dept);
+      const totalCash = Number(deptData.reduce((sum, record) => sum + record.cash, 0).toFixed(2));
+      const totalOnline = Number(deptData.reduce((sum, record) => sum + record.online, 0).toFixed(2));
+      const totalIncome = Number((totalCash + totalOnline).toFixed(2));
+      
+      return {
+        department: dept,
+        total: totalIncome,
+        cash: totalCash,
+        online: totalOnline,
+        hasData: deptData.length > 0
+      };
+    }).filter(dept => dept.hasData && dept.total > 0);
 
-    const sortedDates = Object.keys(dailyData).sort();
-    
+    // Sort by total income (highest first)
+    departmentTotals.sort((a, b) => b.total - a.total);
+
     return {
-      labels: sortedDates.map(date => {
-        // Format date as MM/DD for better readability
-        const [month, day] = date.split('/');
-        return `${month}/${day}`;
-      }),
-      cashData: sortedDates.map(date => Number(dailyData[date].cash.toFixed(2))),
-      onlineData: sortedDates.map(date => Number(dailyData[date].online.toFixed(2))),
-      totalData: sortedDates.map(date => Number(dailyData[date].total.toFixed(2))),
-      rawDates: sortedDates
+      labels: departmentTotals.map(d => d.department),
+      data: departmentTotals.map(d => d.total),
+      cashData: departmentTotals.map(d => d.cash),
+      onlineData: departmentTotals.map(d => d.online),
+      departments: departmentTotals
     };
   }, [data, selectedDepartments, dateRange]);
 
   /**
-   * Create the line chart
+   * Create the horizontal bar chart
    */
   const createChart = useCallback(() => {
     if (!chartRef.current) return;
@@ -152,127 +154,75 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
 
     const chartData = processData();
     
-    if (chartData.labels.length === 0) {
+    if (chartData.data.every(value => value === 0)) {
       // Show empty state
       ctx.clearRect(0, 0, chartRef.current.width, chartRef.current.height);
       return;
     }
 
+    // Generate colors for departments
+    const colors = [
+      '#1FB8CD', '#FFC185', '#A8E6CF', '#FFB6C1', 
+      '#DDA0DD', '#98FB98', '#F0E68C', '#FFA07A'
+    ];
 
     chartInstanceRef.current = new Chart(ctx, {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: chartData.labels,
-        datasets: [
-          {
-            label: 'Cash Income',
-            data: chartData.cashData,
-            borderColor: '#1FB8CD',
-            backgroundColor: 'rgba(31, 184, 205, 0.1)',
-            borderWidth: 3,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#1FB8CD',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            tension: 0.4,
-            fill: true
-          },
-          {
-            label: 'Online Income',
-            data: chartData.onlineData,
-            borderColor: '#FFC185',
-            backgroundColor: 'rgba(255, 193, 133, 0.1)',
-            borderWidth: 3,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#FFC185',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            tension: 0.4,
-            fill: true
-          }
-        ]
+        datasets: [{
+          label: 'Total Income',
+          data: chartData.data,
+          backgroundColor: colors.slice(0, chartData.labels.length),
+          borderColor: colors.slice(0, chartData.labels.length).map(color => color + '80'),
+          borderWidth: 1,
+          borderRadius: 4,
+          borderSkipped: false,
+        }]
       },
       options: {
+        indexAxis: 'y', // Horizontal bar chart
         responsive: true,
         maintainAspectRatio: false,
-        interaction: {
-          intersect: false,
-          mode: 'index'
-        },
         plugins: {
           legend: {
-            display: true,
-            position: 'top',
-            align: 'center',
-            labels: {
-              padding: 20,
-              usePointStyle: true,
-              font: {
-                size: 12,
-                weight: 'bold'
-              },
-              boxWidth: 12,
-              boxHeight: 12,
-              textAlign: 'center'
-            }
+            display: false
           },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            titleColor: '#fff',
-            bodyColor: '#fff',
-            borderColor: '#ddd',
-            borderWidth: 1,
-            cornerRadius: 8,
-            displayColors: true,
             callbacks: {
               label: function(context: any) {
-                return `${context.dataset.label}: ${dataProcessingService.formatCurrency(context.parsed.y)}`;
+                const department = chartData.departments[context.dataIndex];
+                if (department) {
+                  return [
+                    `Total: ${dataProcessingService.formatCurrency(context.parsed.x)}`,
+                    `Cash: ${dataProcessingService.formatCurrency(department.cash)}`,
+                    `Online: ${dataProcessingService.formatCurrency(department.online)}`
+                  ];
+                }
+                return `${context.label}: ${dataProcessingService.formatCurrency(context.parsed.x)}`;
               }
             }
           }
         },
         scales: {
-          x: {
-            display: true,
-            grid: {
-              display: true,
-              color: 'rgba(0, 0, 0, 0.1)'
-            },
-            ticks: {
-              font: {
-                size: 10
-              },
-              color: '#666',
-              maxRotation: 0,
-              minRotation: 0,
-              maxTicksLimit: 10,
-              padding: 8
-            }
-          },
-          y: {
-            beginAtZero: true,
-            display: true,
-            grid: {
-              display: true,
-              color: 'rgba(0, 0, 0, 0.1)'
-            },
-            ticks: {
-              font: {
-                size: 11
-              },
-              color: '#666',
-              maxTicksLimit: 8,
-              callback: function(value: any) {
-                const numValue = Number(value.toFixed(2));
-                if (numValue >= 100000) {
-                  return `₹${(numValue / 100000).toFixed(1)}L`;
-                } else if (numValue >= 1000) {
-                  return `₹${(numValue / 1000).toFixed(1)}K`;
-                } else {
-                  return `₹${numValue.toFixed(0)}`;
+            x: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value: any) {
+                  return dataProcessingService.formatCurrency(Number(value.toFixed(2)));
                 }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              }
+            },
+          y: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              font: {
+                size: 12
               }
             }
           }
@@ -284,6 +234,7 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
       }
     });
   }, [processData]);
+
 
   /**
    * Handle date range change
@@ -313,6 +264,7 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
     setSelectedPeriod('');
   };
 
+
   // Create chart when data or filters change
   useEffect(() => {
     createChart();
@@ -321,7 +273,7 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
   return (
     <div className={styles.chartCard}>
       <div className={styles.cardHeader}>
-        <h3>Daily Income Trend</h3>
+        <h3>Department Performance</h3>
         <div className={styles.headerActions}>
           <button 
             className={`${styles.btn} ${styles.btnOutline} ${styles.btnSm} ${styles.filterToggleBtn}`}

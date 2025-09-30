@@ -1,4 +1,4 @@
-import { GoogleSheetsConfig, IncomeRecord, GoogleSheetsService } from '../types';
+import { GoogleSheetsConfig, IncomeRecord, GoogleSheetsService, BankDetailsConfig, BankDetails } from '../types';
 
 export class GoogleSheetsServiceImpl implements GoogleSheetsService {
   /**
@@ -42,7 +42,7 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
     
     try {
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/${config.range}?key=${config.apiKey}`;
-      console.log('Fetching data from:', url);
+      // console.log('Fetching data from:', url);
       
       const response = await fetch(url);
       
@@ -53,7 +53,7 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
       }
       
       const data = await response.json();
-      console.log('Raw Google Sheets data:', data);
+      // console.log('Raw Google Sheets data:', data);
       return this.parseGoogleSheetsData(data);
       
     } catch (error) {
@@ -66,7 +66,7 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
    * Parse Google Sheets API response into IncomeRecord array
    */
   private parseGoogleSheetsData(data: any): IncomeRecord[] {
-    console.log('Parsing Google Sheets data:', data);
+    // console.log('Parsing Google Sheets data:', data);
     
     if (!data.values || data.values.length < 2) {
       console.warn('No data or insufficient rows in spreadsheet');
@@ -74,8 +74,8 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
     }
     
     const [headers, ...rows] = data.values;
-    console.log('Headers found:', headers);
-    console.log('Number of data rows:', rows.length);
+    // console.log('Headers found:', headers);
+    // console.log('Number of data rows:', rows.length);
     
     // Find column indices - be more flexible with column names
     const dateIndex = headers.findIndex((h: string) => 
@@ -165,6 +165,57 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
     }
     
     return errors;
+  }
+
+  /**
+   * Fetch bank details from Google Sheets
+   */
+  async fetchBankDetails(config: BankDetailsConfig): Promise<BankDetails[]> {
+    try {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/${config.range}?key=${config.apiKey}`;
+      
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!data.values || data.values.length === 0) {
+        return [];
+      }
+      
+      // Skip header row and process data
+      const rows = data.values.slice(1);
+      
+      return rows.map((row: any[], index: number) => {
+        // Ensure we have at least 9 columns (A through I)
+        const paddedRow = [...row, '', '', '', '', '', '', '', '', ''];
+        
+        // Debug logging for balance parsing
+        const rawBalance = paddedRow[5];
+        const cleanedBalance = (rawBalance || '0').replace(/[^\d.-]/g, '');
+        const parsedBalance = parseFloat(cleanedBalance) || 0;
+        
+        // console.log(`Row ${index}: Raw balance: "${rawBalance}", Cleaned: "${cleanedBalance}", Parsed: ${parsedBalance}`);
+        
+        return {
+          bankDetails: paddedRow[0] || '',
+          ifscCode: paddedRow[1] || '',
+          upiIds: paddedRow[2] ? paddedRow[2].split(',').map((id: string) => id.trim()) : [],
+          accountHolderName: paddedRow[3] || '',
+          mainPurpose: paddedRow[4] || '',
+          currentBalance: parsedBalance,
+          accountNumber: paddedRow[6] || '',
+          lastUpdatedDate: paddedRow[7] || '',
+          lastUpdatedTime: paddedRow[8] || ''
+        };
+      });
+    } catch (error) {
+      console.error('Error fetching bank details:', error);
+      throw error;
+    }
   }
 
   /**

@@ -11,6 +11,7 @@ interface DataTableSectionProps {
 
 export const DataTableSection: React.FC<DataTableSectionProps> = ({ data }) => {
   const [sortState, setSortState] = useState<SortState>({ column: 'date', direction: 'descending' });
+  const [isExpanded, setIsExpanded] = useState(false);
   const { addMessage } = useMessages();
 
   const handleSort = (column: string) => {
@@ -27,6 +28,10 @@ export const DataTableSection: React.FC<DataTableSectionProps> = ({ data }) => {
         };
       }
     });
+  };
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
   };
 
   const sortedData = React.useMemo(() => {
@@ -72,7 +77,17 @@ export const DataTableSection: React.FC<DataTableSectionProps> = ({ data }) => {
     <section className={styles.dataTableSection} aria-labelledby="table-heading">
       <div className={styles.card}>
         <div className={styles.cardHeader}>
-          <h3 id="table-heading">Income Records (From Google Sheets)</h3>
+          <div className={styles.headerLeft}>
+            <h3 id="table-heading">Income Records (From Google Sheets)</h3>
+            <button
+              className={styles.toggleBtn}
+              onClick={toggleExpanded}
+              aria-label={isExpanded ? "Collapse income records" : "Expand income records"}
+              aria-expanded={isExpanded}
+            >
+              {isExpanded ? '▲' : '▼'}
+            </button>
+          </div>
           <div className={styles.tableControls}>
             <span className={styles.recordCount} aria-live="polite">
               {data.length} records
@@ -87,8 +102,9 @@ export const DataTableSection: React.FC<DataTableSectionProps> = ({ data }) => {
             </button>
           </div>
         </div>
-        <div className={styles.cardBody}>
-          <div className={styles.tableContainer}>
+        {isExpanded && (
+          <div className={styles.cardBody}>
+            <div className={styles.tableContainer}>
             {data.length === 0 ? (
               <div className={styles.emptyState}>
                 <div className={styles.emptyIcon} aria-hidden="true">📋</div>
@@ -175,8 +191,9 @@ export const DataTableSection: React.FC<DataTableSectionProps> = ({ data }) => {
                 </tbody>
               </table>
             )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

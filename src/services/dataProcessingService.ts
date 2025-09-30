@@ -42,7 +42,9 @@ export class DataProcessingService {
         bestDay: '--',
         topDepartment: '--',
         cashOnlineRatio: '--',
-        avgDailyRevenue: 0
+        avgDailyRevenue: 0,
+        avgMonthlyRevenue: 0,
+        avgYearlyRevenue: 0
       };
     }
     
@@ -86,11 +88,40 @@ export class DataProcessingService {
     const avgDaily = uniqueDates.length > 0 ? 
       (totalCash + totalOnline) / uniqueDates.length : 0;
     
+    // Calculate average monthly revenue
+    const monthlyRevenue: Record<string, number> = {};
+    data.forEach(record => {
+      const [month, , year] = record.date.split('/').map(num => parseInt(num, 10));
+      const monthKey = `${year}-${month.toString().padStart(2, '0')}`;
+      if (!monthlyRevenue[monthKey]) {
+        monthlyRevenue[monthKey] = 0;
+      }
+      monthlyRevenue[monthKey] += record.cash + record.online;
+    });
+    
+    const uniqueMonths = Object.keys(monthlyRevenue).length;
+    const avgMonthly = uniqueMonths > 0 ? (totalCash + totalOnline) / uniqueMonths : 0;
+
+    // Calculate average yearly revenue
+    const yearlyRevenue: Record<string, number> = {};
+    data.forEach(record => {
+      const [, , year] = record.date.split('/').map(num => parseInt(num, 10));
+      if (!yearlyRevenue[year.toString()]) {
+        yearlyRevenue[year.toString()] = 0;
+      }
+      yearlyRevenue[year.toString()] += record.cash + record.online;
+    });
+    
+    const uniqueYears = Object.keys(yearlyRevenue).length;
+    const avgYearly = uniqueYears > 0 ? (totalCash + totalOnline) / uniqueYears : 0;
+
     return {
       bestDay: bestDayFormatted,
       topDepartment: topDeptFormatted,
       cashOnlineRatio: ratioFormatted,
-      avgDailyRevenue: avgDaily
+      avgDailyRevenue: avgDaily,
+      avgMonthlyRevenue: avgMonthly,
+      avgYearlyRevenue: avgYearly
     };
   }
 
@@ -103,22 +134,38 @@ export class DataProcessingService {
     const totalOnline = deptData.reduce((sum, record) => sum + record.online, 0);
     const totalIncome = totalCash + totalOnline;
     
+    // A department has data if it has records AND the total income is greater than 0
+    const hasData = deptData.length > 0 && totalIncome > 0;
+    
     return {
       cash: totalCash,
       online: totalOnline,
       total: totalIncome,
-      hasData: deptData.length > 0
+      hasData: hasData
     };
   }
 
   /**
    * Filter data by date range
+   * Enhanced to support custom date ranges
    */
-  filterDataByDate(data: IncomeRecord[], filter: DateFilter, specificDate?: string): IncomeRecord[] {
+  filterDataByDate(data: IncomeRecord[], filter: DateFilter, specificDate?: string, startDate?: string, endDate?: string): IncomeRecord[] {
     if (filter === 'all') {
       return [...data];
     }
     
+    // Handle custom date range
+    if (filter === 'specific' && startDate && endDate) {
+      return data.filter(record => {
+        const recordDate = this.parseDateString(record.date);
+        const startDateParsed = this.parseDateString(startDate);
+        const endDateParsed = this.parseDateString(endDate);
+        
+        return recordDate >= startDateParsed && recordDate <= endDateParsed;
+      });
+    }
+    
+    // Handle single specific date (legacy support)
     if (filter === 'specific' && specificDate) {
       return data.filter(record => record.date === specificDate);
     }
@@ -145,32 +192,37 @@ export class DataProcessingService {
    * Get date range for filter
    */
   private getDateRange(filter: DateFilter): { start: Date; end: Date } | null {
-    // Get current IST date
+    // Get current IST date - use local time instead of manual offset
     const now = new Date();
-    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
-    const istTime = new Date(now.getTime() + istOffset);
-    
-    const today = new Date(istTime.getFullYear(), istTime.getMonth(), istTime.getDate());
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
     
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay());
+    // Calculate Monday as start of week (0 = Sunday, 1 = Monday, etc.)
+    const dayOfWeek = today.getDay();
+    const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // If Sunday (0), go back 6 days to Monday
+    startOfWeek.setDate(today.getDate() + daysToMonday);
     
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const startOfYear = new Date(today.getFullYear(), 0, 1);
     
     switch (filter) {
-      case 'today':
-        return { start: today, end: today };
       case 'yesterday':
         return { start: yesterday, end: yesterday };
       case 'week':
-        return { start: startOfWeek, end: today };
+        // End of week is Sunday (6 days after Monday)
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        return { start: startOfWeek, end: endOfWeek };
       case 'month':
-        return { start: startOfMonth, end: today };
+        // Get the last day of the current month
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        return { start: startOfMonth, end: endOfMonth };
       case 'year':
-        return { start: startOfYear, end: today };
+        // Get the last day of the current year
+        const endOfYear = new Date(today.getFullYear(), 11, 31);
+        return { start: startOfYear, end: endOfYear };
       default:
         return null;
     }
@@ -189,7 +241,7 @@ export class DataProcessingService {
   /**
    * Parse date string (M/D/YYYY format) to Date object for comparison
    */
-  private parseDateString(dateStr: string): Date {
+  parseDateString(dateStr: string): Date {
     const [month, day, year] = dateStr.split('/').map(num => parseInt(num, 10));
     return new Date(year, month - 1, day);
   }
@@ -201,7 +253,7 @@ export class DataProcessingService {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
-      minimumFractionDigits: 0,
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(amount);
   }

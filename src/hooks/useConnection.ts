@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { GoogleSheetsConfig, ConnectionState, UseConnectionReturn } from '../types';
 import { googleSheetsService } from '../services/googleSheetsService';
 import { dataProcessingService } from '../services/dataProcessingService';
@@ -11,6 +11,59 @@ export const useConnection = (): UseConnectionReturn => {
   
   const autoSyncIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const configRef = useRef<GoogleSheetsConfig | null>(null);
+
+  const stopAutoSync = useCallback(() => {
+    if (autoSyncIntervalRef.current) {
+      clearInterval(autoSyncIntervalRef.current);
+      autoSyncIntervalRef.current = null;
+    }
+  }, []);
+
+  const sync = useCallback(async () => {
+    if (!configRef.current) {
+      throw new Error('Not connected to Google Sheets');
+    }
+
+    try {
+      setConnectionState(prev => ({
+        ...prev,
+        status: 'connecting',
+        message: 'Syncing...'
+      }));
+
+      // Fetch fresh data from Google Sheets
+      await googleSheetsService.fetchData(configRef.current);
+      
+      setConnectionState(prev => ({
+        status: 'connected',
+        message: 'Synced successfully',
+        lastSync: dataProcessingService.getCurrentTime()
+      }));
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Sync failed';
+      setConnectionState({
+        status: 'disconnected',
+        message: errorMessage
+      });
+      throw error;
+    }
+  }, []);
+
+  const startAutoSync = useCallback(() => {
+    if (autoSyncIntervalRef.current) {
+      clearInterval(autoSyncIntervalRef.current);
+    }
+
+    if (configRef.current) {
+      autoSyncIntervalRef.current = setInterval(async () => {
+        try {
+          await sync();
+        } catch (error) {
+          console.error('Auto-sync failed:', error);
+        }
+      }, configRef.current.refreshInterval);
+    }
+  }, [sync]);
 
   const connect = useCallback(async (config: GoogleSheetsConfig): Promise<boolean> => {
     setConnectionState({
@@ -47,7 +100,7 @@ export const useConnection = (): UseConnectionReturn => {
       });
       return false;
     }
-  }, []);
+  }, [startAutoSync]);
 
   const disconnect = useCallback(() => {
     stopAutoSync();
@@ -56,65 +109,13 @@ export const useConnection = (): UseConnectionReturn => {
       status: 'disconnected',
       message: 'Disconnected'
     });
-  }, []);
-
-  const sync = useCallback(async () => {
-    if (!configRef.current) {
-      throw new Error('Not connected to Google Sheets');
-    }
-
-    try {
-      setConnectionState(prev => ({
-        ...prev,
-        status: 'connecting',
-        message: 'Syncing...'
-      }));
-
-      // Fetch fresh data from Google Sheets
-      const newData = await googleSheetsService.fetchData(configRef.current);
-      console.log('Synced data:', newData);
-      
-      setConnectionState(prev => ({
-        status: 'connected',
-        message: 'Synced successfully',
-        lastSync: dataProcessingService.getCurrentTime()
-      }));
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sync failed';
-      setConnectionState({
-        status: 'disconnected',
-        message: errorMessage
-      });
-      throw error;
-    }
-  }, []);
-
-  const startAutoSync = useCallback(() => {
-    if (autoSyncIntervalRef.current) {
-      clearInterval(autoSyncIntervalRef.current);
-    }
-
-    if (configRef.current) {
-      autoSyncIntervalRef.current = setInterval(async () => {
-        try {
-          await sync();
-        } catch (error) {
-          console.error('Auto-sync failed:', error);
-        }
-      }, configRef.current.refreshInterval);
-    }
-  }, [sync]);
-
-  const stopAutoSync = useCallback(() => {
-    if (autoSyncIntervalRef.current) {
-      clearInterval(autoSyncIntervalRef.current);
-      autoSyncIntervalRef.current = null;
-    }
-  }, []);
+  }, [stopAutoSync]);
 
   // Cleanup on unmount
-  const cleanup = useCallback(() => {
-    stopAutoSync();
+  useEffect(() => {
+    return () => {
+      stopAutoSync();
+    };
   }, [stopAutoSync]);
 
   return {

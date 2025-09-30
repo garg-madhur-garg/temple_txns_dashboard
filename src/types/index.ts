@@ -1,4 +1,36 @@
-// Core data types
+/**
+ * TEMPLE TRANSACTIONS DASHBOARD - TYPE DEFINITIONS
+ * ===============================================
+ * 
+ * This file contains all TypeScript type definitions for the Temple Transactions Dashboard.
+ * It provides type safety and IntelliSense support for the React components and services.
+ * 
+ * Key Type Categories:
+ * - Core data structures (IncomeRecord, DepartmentTotals)
+ * - Component props and interfaces
+ * - Service contracts and configurations
+ * - Utility types and constants
+ * 
+ * Author: Temple Management System
+ * Last Updated: 2025
+ */
+
+// ============================================================================
+// CORE DATA TYPES
+// ============================================================================
+
+/**
+ * Income Record Interface
+ * 
+ * Represents a single income transaction record from temple departments.
+ * This is the fundamental data structure used throughout the application.
+ * 
+ * @interface IncomeRecord
+ * @property {string} date - Transaction date in YYYY-MM-DD format
+ * @property {string} department - Department name (must match ALL_DEPARTMENTS)
+ * @property {number} cash - Cash income amount in INR
+ * @property {number} online - Online payment income amount in INR
+ */
 export interface IncomeRecord {
   date: string;
   department: string;
@@ -6,6 +38,45 @@ export interface IncomeRecord {
   online: number;
 }
 
+/**
+ * Bank Details Interface
+ * 
+ * Represents bank account information from Google Sheets.
+ * Used for displaying bank details above income records.
+ * 
+ * @interface BankDetails
+ * @property {string} bankDetails - Bank name and details
+ * @property {string} ifscCode - IFSC code of the bank
+ * @property {string[]} upiIds - Array of UPI IDs (can be multiple)
+ * @property {string} accountHolderName - Name of the account holder
+ * @property {string} mainPurpose - Main purpose of the account
+ * @property {number} currentBalance - Current balance in the account
+ * @property {string} accountNumber - Bank account number
+ */
+export interface BankDetails {
+  bankDetails: string;
+  ifscCode: string;
+  upiIds: string[];
+  accountHolderName: string;
+  mainPurpose: string;
+  currentBalance: number;
+  accountNumber: string;
+  lastUpdatedDate?: string;
+  lastUpdatedTime?: string;
+}
+
+/**
+ * Department Totals Interface
+ * 
+ * Represents aggregated income data for a specific department.
+ * Used in department cards and summary displays.
+ * 
+ * @interface DepartmentTotals
+ * @property {number} cash - Total cash income for the department
+ * @property {number} online - Total online income for the department
+ * @property {number} total - Combined total income (cash + online)
+ * @property {boolean} hasData - Whether the department has any income data
+ */
 export interface DepartmentTotals {
   cash: number;
   online: number;
@@ -28,6 +99,8 @@ export interface AnalyticsData {
   topDepartment: string;
   cashOnlineRatio: string;
   avgDailyRevenue: number;
+  avgMonthlyRevenue: number;
+  avgYearlyRevenue: number;
 }
 
 // Google Sheets configuration
@@ -36,6 +109,13 @@ export interface GoogleSheetsConfig {
   spreadsheetId: string;
   range: string;
   refreshInterval: number;
+}
+
+// Bank Details Google Sheets configuration
+export interface BankDetailsConfig {
+  apiKey: string;
+  spreadsheetId: string;
+  range: string;
 }
 
 // Connection status
@@ -48,8 +128,17 @@ export interface ConnectionState {
 }
 
 // Filter types
-export type DateFilter = 'all' | 'today' | 'yesterday' | 'week' | 'month' | 'year' | 'specific';
+export type DateFilter = 'all' | 'yesterday' | 'week' | 'month' | 'year' | 'specific';
 
+/**
+ * Date Range Interface
+ * 
+ * Represents a date range for filtering data
+ * 
+ * @interface DateRange
+ * @property {Date} start - Start date of the range
+ * @property {Date} end - End date of the range
+ */
 export interface DateRange {
   start: Date;
   end: Date;
@@ -65,11 +154,6 @@ export interface DailyTrendData {
   labels: string[];
   cashData: number[];
   onlineData: number[];
-}
-
-export interface DepartmentChartData {
-  labels: string[];
-  data: number[];
 }
 
 export interface PaymentMethodData {
@@ -111,6 +195,7 @@ export interface DataTableProps {
 export interface GoogleSheetsService {
   testConnection: (config: GoogleSheetsConfig) => Promise<boolean>;
   fetchData: (config: GoogleSheetsConfig) => Promise<IncomeRecord[]>;
+  fetchBankDetails: (config: BankDetailsConfig) => Promise<BankDetails[]>;
 }
 
 export interface DataProcessingService {
@@ -160,15 +245,20 @@ export interface Message {
 }
 
 // Constants
+// Updated department names and reordered as requested:
+// - Govindas Res -> Govindas (simplified name)
+// - Govindas Stall -> Vrinda's Food Court (new name)
+// - Snacks Shop -> Gopal's Sweet Shop (new name)
+// New priority order: Guest House, Govindas, Vrinda's Food Court, Seva Office, Gift Shop, Gopal's Sweet Shop, Railway Book Stall, Kitchen
 export const ALL_DEPARTMENTS = [
-  "Guest House",
-  "Govindas Res", 
-  "Govindas Stall",
-  "Gift Shop",
-  "Snacks Shop",
-  "Seva Office",
-  "Railway Book Stall",
-  "Kitchen"
+  "Guest House",                 // Accommodation services
+  "Govindas",                    // Main restaurant (formerly Govindas Res)
+  "Vrinda's Food Court",         // Food court (formerly Govindas Stall)
+  "Seva Office",                 // Administrative office
+  "Gift Shop",                   // Retail merchandise
+  "Gopal's Sweet Shop",          // Sweet shop (formerly Snacks Shop)
+  "Railway Book Stall",          // Book sales
+  "Kitchen"                      // Food preparation (currently inactive)
 ] as const;
 
 export type DepartmentName = typeof ALL_DEPARTMENTS[number];

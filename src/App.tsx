@@ -5,6 +5,7 @@ import { KPISection } from './components/KPISection';
 import { DepartmentsSection } from './components/DepartmentsSection';
 import { ChartsSection } from './components/ChartsSection';
 import { AnalyticsSection } from './components/AnalyticsSection';
+import { BankDetailsSection } from './components/BankDetailsSection';
 import { DataTableSection } from './components/DataTableSection';
 import { ShareModal } from './components/ShareModal';
 import { LoadingOverlay } from './components/LoadingOverlay';
@@ -14,24 +15,45 @@ import { useIncomeData } from './hooks/useIncomeData';
 import { useFilters } from './hooks/useFilters';
 import { useConnection } from './hooks/useConnection';
 import { useMessages } from './hooks/useMessages';
+import { useBankDetails } from './hooks/useBankDetails';
+import { bankDetailsConfig } from './config/bankDetailsConfig';
 import styles from './App.module.css';
+
+/**
+ * MAIN APP COMPONENT - ENHANCED WITH DATE RANGE SUPPORT
+ * =====================================================
+ * 
+ * Main React component for the Temple Transactions Dashboard.
+ * Enhanced to support date range filtering functionality.
+ * 
+ * @author Temple Management System
+ * @lastUpdated 2025
+ */
 
 function App() {
   const { data, loading, refresh } = useIncomeData();
-  const { currentFilter, setFilter, filteredData } = useFilters(data);
-  const { connectionState, connect, disconnect, sync } = useConnection();
+  const { currentFilter, setFilter, setDateRange, filteredData } = useFilters(data);
+  const { connectionState, connect, sync } = useConnection();
   const { messages, addMessage, removeMessage } = useMessages();
+  const { data: bankDetails, loading: bankLoading } = useBankDetails(bankDetailsConfig);
 
   // Auto-connect to Google Sheets on app load
   useEffect(() => {
     const autoConnect = async () => {
       try {
         const config = {
-          apiKey: 'AIzaSyCndZeCj6CHI3c4aZ0NhllTEbBev6Mg3mg',
-          spreadsheetId: '1sIKmerb68mazwhs4DUE3XQK9vvsKxUi7tBD6DPSrrcI',
-          range: 'Sheet2!B:F',
-          refreshInterval: 30000
+          apiKey: process.env.REACT_APP_GOOGLE_SHEETS_API_KEY || '',
+          spreadsheetId: process.env.REACT_APP_INCOME_SPREADSHEET_ID || '',
+          range: process.env.REACT_APP_INCOME_SHEET_RANGE || '',
+          refreshInterval: parseInt(process.env.REACT_APP_REFRESH_INTERVAL || '0', 10)
         };
+        
+        // Validate required environment variables
+        if (!config.apiKey || !config.spreadsheetId || !config.range || config.refreshInterval <= 0) {
+          console.error('Missing required environment variables: REACT_APP_GOOGLE_SHEETS_API_KEY, REACT_APP_INCOME_SPREADSHEET_ID, REACT_APP_INCOME_SHEET_RANGE, and REACT_APP_REFRESH_INTERVAL');
+          return;
+        }
+        
         await connect(config);
       } catch (error) {
         console.error('Auto-connect failed:', error);
@@ -73,21 +95,23 @@ function App() {
         <DateFilterBar 
           currentFilter={currentFilter}
           onFilterChange={setFilter}
+          onDateRangeChange={setDateRange}
           dataCount={filteredData.length}
         />
         
         <main className={styles.dashboardMain}>
           <div className={styles.container}>
-            <KPISection data={filteredData} />
+            <KPISection data={filteredData} bankDetails={bankDetails} />
             <DepartmentsSection data={filteredData} />
             <ChartsSection data={filteredData} />
-            <AnalyticsSection data={filteredData} />
+            <AnalyticsSection data={data} />
+            <BankDetailsSection data={bankDetails} />
             <DataTableSection data={filteredData} />
           </div>
         </main>
         
         <ShareModal />
-        <LoadingOverlay visible={loading} />
+        <LoadingOverlay visible={loading || bankLoading} />
         <MessageContainer messages={messages} onRemove={removeMessage} />
       </div>
     </ThemeProvider>

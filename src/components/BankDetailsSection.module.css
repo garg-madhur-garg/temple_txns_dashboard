@@ -1,0 +1,479 @@
+.bankDetailsSection {
+  margin-bottom: var(--space-16);
+}
+
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.cardHeader {
+  padding: var(--space-12);
+  border-bottom: 1px solid var(--color-card-border-inner);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+
+.totalBalanceSummary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.totalBalanceLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.totalBalanceValue {
+  font-size: var(--font-size-base);
+  font-weight: bold;
+  color: var(--color-success);
+  font-family: var(--font-family-mono);
+}
+
+.tableControls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.lastUpdatedInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.lastUpdatedLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.lastUpdatedValue {
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+  color: var(--color-primary);
+  font-family: var(--font-family-mono);
+}
+
+.recordCount {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.cardBody {
+  padding: var(--space-12);
+}
+
+.tableContainer {
+  overflow-x: auto;
+  overflow-y: visible;
+  position: relative;
+  border: 1px solid var(--color-card-border-inner);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+/* Table container styling */
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.dataTable th,
+.dataTable td {
+  padding: var(--space-8) var(--space-12);
+  text-align: left;
+  border-bottom: 1px solid var(--color-card-border-inner);
+  vertical-align: top;
+}
+
+.dataTable th {
+  background: var(--color-bg-3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-card-border-inner);
+}
+
+.dataTable thead th {
+  background: var(--color-bg-3);
+}
+
+.dataTable thead {
+  background: var(--color-bg-3);
+}
+
+.dataTable thead tr {
+  background: var(--color-bg-3);
+}
+
+.dataTable thead tr th {
+  background: var(--color-bg-3) !important;
+  border-bottom: 2px solid var(--color-card-border-inner);
+}
+
+/* Ensure header row has maximum priority */
+.dataTable thead tr th:first-child {
+  border-top-left-radius: var(--radius-sm);
+}
+
+.dataTable thead tr th:last-child {
+  border-top-right-radius: var(--radius-sm);
+}
+
+.dataTable td {
+  color: var(--color-text);
+}
+
+.dataTable tbody tr:hover {
+  background: var(--color-bg-1);
+}
+
+.dataTable tbody {
+  margin-top: 0;
+}
+
+.dataTable tbody tr:first-child td {
+  border-top: 1px solid var(--color-card-border-inner);
+}
+
+/* First row styling */
+.dataTable tbody tr:first-child td {
+  background: var(--color-surface);
+}
+
+.headerCell {
+  background: var(--color-bg-3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 2px solid var(--color-card-border-inner);
+}
+
+.dataRow {
+  border-bottom: 1px solid var(--color-card-border-inner);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.dataRow:hover {
+  background: var(--color-bg-1);
+}
+
+.dataRow:last-child {
+  border-bottom: none;
+}
+
+.dataCell {
+  color: var(--color-text);
+  vertical-align: top;
+}
+
+.bankDetailsCell {
+  font-weight: 500;
+  color: var(--color-text);
+  max-width: 150px;
+  word-wrap: break-word;
+  font-size: var(--font-size-sm);
+}
+
+.ifscCell {
+  font-family: var(--font-family-mono);
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: var(--font-size-base);
+  white-space: nowrap;
+}
+
+.accountNumberCell {
+  font-family: var(--font-family-mono);
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+.upiCell {
+  max-width: 200px;
+  min-width: 150px;
+}
+
+.upiList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.upiItem {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  word-break: break-all;
+  display: block;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.noData {
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.accountHolderCell {
+  font-weight: 500;
+  color: var(--color-text);
+  max-width: 120px;
+  word-wrap: break-word;
+  font-size: var(--font-size-sm);
+}
+
+.purposeCell {
+  color: var(--color-text);
+  max-width: 150px;
+  word-wrap: break-word;
+  font-style: italic;
+  font-size: var(--font-size-sm);
+}
+
+.balanceCell {
+  font-weight: 600;
+  color: var(--color-success);
+  text-align: right;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.actionsCell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+  min-width: 100px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-12);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-standard);
+  border: none;
+  text-decoration: none;
+  position: relative;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.btnOutline {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.btnOutline:hover:not(:disabled) {
+  background: var(--color-secondary);
+}
+
+.btnSecondary {
+  background: var(--color-secondary);
+  color: white;
+  border: 1px solid var(--color-secondary);
+}
+
+.btnSecondary:hover:not(:disabled) {
+  background: var(--color-secondary-dark);
+}
+
+.btnSm {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--space-20);
+  color: var(--color-text-secondary);
+}
+
+.emptyIcon {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--space-12);
+  opacity: 0.5;
+}
+
+.emptyTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-6);
+  color: var(--color-text);
+}
+
+.emptyDescription {
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .bankDetailsCell,
+  .purposeCell {
+    max-width: 120px;
+  }
+  
+  .upiCell {
+    max-width: 180px;
+    min-width: 140px;
+  }
+  
+  .ifscCell {
+    font-size: var(--font-size-sm);
+  }
+  
+  .balanceCell {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+  }
+  
+  .totalBalanceSummary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  
+  .totalBalanceValue {
+    font-size: var(--font-size-sm);
+  }
+  
+  .tableControls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+  
+  .lastUpdatedInfo {
+    align-items: flex-start;
+  }
+  
+  .bankDetailsCell,
+  .purposeCell {
+    max-width: 100px;
+  }
+  
+  .upiCell {
+    max-width: 150px;
+    min-width: 120px;
+  }
+  
+  .upiItem {
+    font-size: var(--font-size-sm);
+  }
+  
+  .ifscCell {
+    font-size: var(--font-size-sm);
+  }
+  
+  .balanceCell {
+    font-size: var(--font-size-sm);
+  }
+  
+  .actionsCell {
+    min-width: 80px;
+  }
+  
+  .btn {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .dataTable {
+    font-size: var(--font-size-xs);
+  }
+  
+  .dataTable th,
+  .dataTable td {
+    padding: var(--space-4) var(--space-6);
+  }
+  
+  .bankDetailsCell,
+  .purposeCell {
+    max-width: 80px;
+  }
+  
+  .upiCell {
+    max-width: 120px;
+    min-width: 100px;
+  }
+  
+  .upiItem {
+    font-size: var(--font-size-sm);
+  }
+  
+  .ifscCell {
+    font-size: var(--font-size-sm);
+  }
+  
+  .balanceCell {
+    font-size: var(--font-size-sm);
+  }
+  
+  .actionsCell {
+    min-width: 70px;
+  }
+  
+  .btn {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-xs);
+  }
+}

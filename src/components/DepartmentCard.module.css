@@ -33,7 +33,7 @@
 .departmentName {
   margin: 0;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: bold;
   color: #333;
 }
 
@@ -41,7 +41,7 @@
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
@@ -89,12 +89,13 @@
   font-size: 0.875rem;
   color: #666;
   font-weight: 500;
+  font-style: italic;
 }
 
 .incomeValue {
   font-size: 0.875rem;
   color: #333;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 .incomeItem.total .incomeValue {

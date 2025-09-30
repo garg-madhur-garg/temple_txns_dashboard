@@ -153,3 +153,273 @@ body {
 .status-indicator.connecting {
   color: var(--theme-warning);
 }
+
+/* Bold and Italic Styling for Dashboard Elements */
+
+/* Headers and Titles - Bold */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+/* Card Headers - Bold */
+.card-header h3,
+.card-header h2,
+.card-header h1 {
+  font-weight: bold;
+}
+
+/* KPI Values - Bold */
+.kpiCard .value,
+.kpiCard .kpi-value,
+.kpi-value {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* KPI Labels - Italic */
+.kpiCard .label,
+.kpiCard .kpi-label,
+.kpi-label {
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Department Names - Bold */
+.departmentCard .departmentName,
+.department-name {
+  font-weight: bold;
+}
+
+/* Status Badges - Bold */
+.status-badge,
+.statusBadge {
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Table Headers - Bold */
+.dataTable th,
+.table-header {
+  font-weight: bold;
+}
+
+/* Currency Values - Bold */
+.currency,
+.currency-value,
+.money-value {
+  font-weight: bold;
+  font-family: monospace;
+}
+
+/* Performance Metrics - Bold */
+.insightValue,
+.performance-value,
+.metric-value {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* Performance Labels - Italic */
+.insightLabel,
+.performance-label,
+.metric-label {
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Button Text - Bold */
+.btn {
+  font-weight: bold;
+}
+
+/* Form Labels - Bold */
+.form-label,
+label {
+  font-weight: bold;
+}
+
+/* Required Field Indicators - Bold Italic */
+.required,
+.required-field {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.required::after {
+  content: " *";
+  color: var(--theme-danger);
+  font-weight: bold;
+}
+
+/* Error Messages - Bold Italic */
+.error-message,
+.validation-error {
+  font-weight: bold;
+  font-style: italic;
+  color: var(--theme-danger);
+}
+
+/* Success Messages - Bold */
+.success-message,
+.success-text {
+  font-weight: bold;
+  color: var(--theme-success);
+}
+
+/* Warning Messages - Bold Italic */
+.warning-message,
+.warning-text {
+  font-weight: bold;
+  font-style: italic;
+  color: var(--theme-warning);
+}
+
+/* Info Messages - Italic */
+.info-message,
+.info-text {
+  font-style: italic;
+  color: var(--theme-info);
+}
+
+/* Navigation and Menu Items - Bold */
+.nav-item,
+.menu-item,
+.navigation-item {
+  font-weight: bold;
+}
+
+/* Section Titles - Bold */
+.section-title,
+.section-header {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* Data Labels - Italic */
+.data-label,
+.field-label {
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Totals and Summaries - Bold */
+.total,
+.summary,
+.grand-total {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* Percentages - Bold */
+.percentage,
+.percent {
+  font-weight: bold;
+}
+
+/* Dates and Times - Italic */
+.date,
+.time,
+.timestamp {
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Department Status - Bold */
+.department-status,
+.status-text {
+  font-weight: bold;
+}
+
+/* Revenue and Income - Bold */
+.revenue,
+.income,
+.amount {
+  font-weight: bold;
+  font-family: monospace;
+}
+
+/* Chart Labels - Bold */
+.chart-label,
+.chart-title {
+  font-weight: bold;
+}
+
+/* Filter Labels - Bold */
+.filter-label,
+.filter-title {
+  font-weight: bold;
+}
+
+/* Export and Action Labels - Bold */
+.export-label,
+.action-label {
+  font-weight: bold;
+}
+
+/* Connection Status - Bold */
+.connection-status,
+.connection-text {
+  font-weight: bold;
+}
+
+/* Loading States - Italic */
+.loading-text,
+.loading-message {
+  font-style: italic;
+}
+
+/* Empty States - Italic */
+.empty-state,
+.empty-message {
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Tooltips - Bold */
+.tooltip,
+.tooltip-text {
+  font-weight: bold;
+}
+
+/* Legends - Bold */
+.legend,
+.legend-item {
+  font-weight: bold;
+}
+
+/* Sortable Headers - Bold */
+.sortable,
+.sortable-header {
+  font-weight: bold;
+}
+
+/* Pagination - Bold */
+.pagination,
+.page-info {
+  font-weight: bold;
+}
+
+/* Search and Filter - Bold */
+.search-label,
+.filter-text {
+  font-weight: bold;
+}
+
+/* Responsive Text Adjustments */
+@media (max-width: 768px) {
+  .kpiCard .value,
+  .kpi-value {
+    font-size: 1.1em;
+  }
+  
+  .insightValue,
+  .performance-value {
+    font-size: 1em;
+  }
+  
+  .total,
+  .summary {
+    font-size: 1em;
+  }
+}

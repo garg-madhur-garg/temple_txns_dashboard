@@ -23,10 +23,42 @@
   align-items: center;
 }
 
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
 .cardHeader h3 {
   margin: 0;
   font-size: var(--font-size-lg);
   color: var(--color-text);
+}
+
+.toggleBtn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.toggleBtn:hover {
+  background: var(--color-primary-dark);
+  transform: scale(1.05);
+}
+
+.toggleBtn:focus-visible {
+  outline: var(--focus-outline);
+  box-shadow: var(--focus-ring);
 }
 
 .tableControls {
@@ -42,6 +74,8 @@
 
 .cardBody {
   padding: var(--space-16);
+  transition: all var(--duration-normal) var(--ease-standard);
+  overflow: hidden;
 }
 
 .tableContainer {
@@ -189,13 +223,31 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+  }
+
+  .headerLeft {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .tableControls {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-8);
+    width: 100%;
   }
 
   .tableContainer {
     max-height: 400px;
+  }
+
+  .toggleBtn {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-xs);
   }
 }
