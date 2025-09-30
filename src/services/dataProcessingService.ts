@@ -91,7 +91,7 @@ export class DataProcessingService {
     // Calculate average monthly revenue
     const monthlyRevenue: Record<string, number> = {};
     data.forEach(record => {
-      const [month, day, year] = record.date.split('/').map(num => parseInt(num, 10));
+      const [month, , year] = record.date.split('/').map(num => parseInt(num, 10));
       const monthKey = `${year}-${month.toString().padStart(2, '0')}`;
       if (!monthlyRevenue[monthKey]) {
         monthlyRevenue[monthKey] = 0;
@@ -105,7 +105,7 @@ export class DataProcessingService {
     // Calculate average yearly revenue
     const yearlyRevenue: Record<string, number> = {};
     data.forEach(record => {
-      const [month, day, year] = record.date.split('/').map(num => parseInt(num, 10));
+      const [, , year] = record.date.split('/').map(num => parseInt(num, 10));
       if (!yearlyRevenue[year.toString()]) {
         yearlyRevenue[year.toString()] = 0;
       }

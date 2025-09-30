@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { IncomeRecord, UseIncomeDataReturn } from '../types';
 import { googleSheetsService } from '../services/googleSheetsService';
 import { GoogleSheetsConfig } from '../types';
-import { dataProcessingService } from '../services/dataProcessingService';
 
 export const useIncomeData = (): UseIncomeDataReturn => {
   const [data, setData] = useState<IncomeRecord[]>([]);
@@ -15,13 +14,18 @@ export const useIncomeData = (): UseIncomeDataReturn => {
     setError(null);
     
     try {
-      // Use the real Google Sheets configuration
+      // Use environment variables (required)
       const config: GoogleSheetsConfig = {
-        apiKey: 'AIzaSyCndZeCj6CHI3c4aZ0NhllTEbBev6Mg3mg',
-        spreadsheetId: '1sIKmerb68mazwhs4DUE3XQK9vvsKxUi7tBD6DPSrrcI',
-        range: 'Sheet1!A:E',
-        refreshInterval: 30000
+        apiKey: process.env.REACT_APP_GOOGLE_SHEETS_API_KEY || '',
+        spreadsheetId: process.env.REACT_APP_INCOME_SPREADSHEET_ID || '',
+        range: process.env.REACT_APP_INCOME_SHEET_RANGE || '',
+        refreshInterval: parseInt(process.env.REACT_APP_REFRESH_INTERVAL || '0', 10)
       };
+      
+      // Validate required environment variables
+      if (!config.apiKey || !config.spreadsheetId || !config.range || config.refreshInterval <= 0) {
+        throw new Error('Missing required environment variables: REACT_APP_GOOGLE_SHEETS_API_KEY, REACT_APP_INCOME_SPREADSHEET_ID, REACT_APP_INCOME_SHEET_RANGE, and REACT_APP_REFRESH_INTERVAL');
+      }
       
       const newData = await googleSheetsService.fetchData(config);
       setData(newData);

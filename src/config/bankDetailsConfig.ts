@@ -4,28 +4,39 @@ import { BankDetailsConfig } from '../types';
  * Bank Details Configuration
  * 
  * Configuration for fetching bank details from Google Sheets.
- * This file should be updated with your specific Google Sheets details.
+ * This configuration now uses environment variables for security.
  * 
  * Instructions:
- * 1. Get your Google Sheets API key from Google Cloud Console
- * 2. Get your spreadsheet ID from the Google Sheets URL
- * 3. Set the range to match your bank details sheet (e.g., 'Bank Details!A:F')
- * 4. Update the values below with your specific details
+ * 1. Copy .env.example to .env
+ * 2. Get your Google Sheets API key from Google Cloud Console
+ * 3. Get your spreadsheet ID from the Google Sheets URL
+ * 4. Set the range to match your bank details sheet (e.g., 'Bank Details!A:G')
+ * 5. Update the values in your .env file with your specific details
+ * 
+ * Environment Variables Required:
+ * - REACT_APP_GOOGLE_SHEETS_API_KEY
+ * - REACT_APP_BANK_SPREADSHEET_ID
+ * - REACT_APP_BANK_SHEET_RANGE
  */
 
 export const bankDetailsConfig: BankDetailsConfig = {
-  // Replace with your Google Sheets API key
-  apiKey: 'AIzaSyCndZeCj6CHI3c4aZ0NhllTEbBev6Mg3mg',
+  // Google Sheets API key from environment variables (required)
+  apiKey: process.env.REACT_APP_GOOGLE_SHEETS_API_KEY || '',
   
-  // Replace with your Google Sheets spreadsheet ID
+  // Google Sheets spreadsheet ID from environment variables (required)
   // Found in the URL: https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit
-  spreadsheetId: '1sIKmerb68mazwhs4DUE3XQK9vvsKxUi7tBD6DPSrrcI',
+  spreadsheetId: process.env.REACT_APP_BANK_SPREADSHEET_ID || '',
   
-  // Replace with the range that contains your bank details
+  // Range that contains your bank details from environment variables (required)
   // Format: 'SheetName!A:G' (adjust based on your sheet structure)
   // Expected columns: Bank Details, IFSC Code, UPI IDs, Account Holder Name, Main Purpose, Current Balance, Account Number
-  range: 'Current_Balance!A:G'
+  range: process.env.REACT_APP_BANK_SHEET_RANGE || ''
 };
+
+// Validate required environment variables
+if (!bankDetailsConfig.apiKey || !bankDetailsConfig.spreadsheetId || !bankDetailsConfig.range) {
+  console.error('Missing required environment variables for bank details: REACT_APP_GOOGLE_SHEETS_API_KEY, REACT_APP_BANK_SPREADSHEET_ID, and REACT_APP_BANK_SHEET_RANGE');
+}
 
 /**
  * Bank Details Sheet Structure

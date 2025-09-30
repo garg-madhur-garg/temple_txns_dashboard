@@ -34,7 +34,7 @@ export const DepartmentCard: React.FC<DepartmentCardProps> = ({ name, totals }) 
   const statusText = totals.hasData ? 'Active' : 'No Data';
   
   // Debug logging to help identify issues
-  console.log(`Department ${name}: hasData=${totals.hasData}, total=${totals.total}, cash=${totals.cash}, online=${totals.online}`);
+  // console.log(`Department ${name}: hasData=${totals.hasData}, total=${totals.total}, cash=${totals.cash}, online=${totals.online}`);
 
   return (
     <div className={`${styles.departmentCard} ${styles[status]}`}>

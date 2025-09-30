@@ -154,11 +154,6 @@ export interface DailyTrendData {
   onlineData: number[];
 }
 
-export interface DepartmentChartData {
-  labels: string[];
-  data: number[];
-}
-
 export interface PaymentMethodData {
   labels: string[];
   data: number[];

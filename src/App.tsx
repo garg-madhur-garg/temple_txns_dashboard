@@ -33,7 +33,7 @@ import styles from './App.module.css';
 function App() {
   const { data, loading, refresh } = useIncomeData();
   const { currentFilter, setFilter, setDateRange, filteredData } = useFilters(data);
-  const { connectionState, connect, disconnect, sync } = useConnection();
+  const { connectionState, connect, sync } = useConnection();
   const { messages, addMessage, removeMessage } = useMessages();
   const { data: bankDetails, loading: bankLoading } = useBankDetails(bankDetailsConfig);
 
@@ -42,11 +42,18 @@ function App() {
     const autoConnect = async () => {
       try {
         const config = {
-          apiKey: 'AIzaSyCndZeCj6CHI3c4aZ0NhllTEbBev6Mg3mg',
-          spreadsheetId: '1sIKmerb68mazwhs4DUE3XQK9vvsKxUi7tBD6DPSrrcI',
-          range: 'Sheet1!A:E',
-          refreshInterval: 30000
+          apiKey: process.env.REACT_APP_GOOGLE_SHEETS_API_KEY || '',
+          spreadsheetId: process.env.REACT_APP_INCOME_SPREADSHEET_ID || '',
+          range: process.env.REACT_APP_INCOME_SHEET_RANGE || '',
+          refreshInterval: parseInt(process.env.REACT_APP_REFRESH_INTERVAL || '0', 10)
         };
+        
+        // Validate required environment variables
+        if (!config.apiKey || !config.spreadsheetId || !config.range || config.refreshInterval <= 0) {
+          console.error('Missing required environment variables: REACT_APP_GOOGLE_SHEETS_API_KEY, REACT_APP_INCOME_SPREADSHEET_ID, REACT_APP_INCOME_SHEET_RANGE, and REACT_APP_REFRESH_INTERVAL');
+          return;
+        }
+        
         await connect(config);
       } catch (error) {
         console.error('Auto-connect failed:', error);

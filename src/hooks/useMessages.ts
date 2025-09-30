@@ -4,6 +4,10 @@ import { Message, MessageType } from '../types';
 export const useMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
 
+  const removeMessage = useCallback((id: string) => {
+    setMessages(prev => prev.filter(msg => msg.id !== id));
+  }, []);
+
   const addMessage = useCallback((text: string, type: MessageType = 'info') => {
     const message: Message = {
       id: Date.now().toString(),
@@ -17,11 +21,7 @@ export const useMessages = () => {
     setTimeout(() => {
       removeMessage(message.id);
     }, 5000);
-  }, []);
-
-  const removeMessage = useCallback((id: string) => {
-    setMessages(prev => prev.filter(msg => msg.id !== id));
-  }, []);
+  }, [removeMessage]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);

@@ -126,7 +126,7 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
     return {
       labels: sortedDates.map(date => {
         // Format date as MM/DD for better readability
-        const [month, day, year] = date.split('/');
+        const [month, day] = date.split('/');
         return `${month}/${day}`;
       }),
       cashData: sortedDates.map(date => Number(dailyData[date].cash.toFixed(2))),

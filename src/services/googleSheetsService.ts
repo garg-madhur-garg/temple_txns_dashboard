@@ -42,7 +42,7 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
     
     try {
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/${config.range}?key=${config.apiKey}`;
-      console.log('Fetching data from:', url);
+      // console.log('Fetching data from:', url);
       
       const response = await fetch(url);
       
@@ -53,7 +53,7 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
       }
       
       const data = await response.json();
-      console.log('Raw Google Sheets data:', data);
+      // console.log('Raw Google Sheets data:', data);
       return this.parseGoogleSheetsData(data);
       
     } catch (error) {
@@ -66,7 +66,7 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
    * Parse Google Sheets API response into IncomeRecord array
    */
   private parseGoogleSheetsData(data: any): IncomeRecord[] {
-    console.log('Parsing Google Sheets data:', data);
+    // console.log('Parsing Google Sheets data:', data);
     
     if (!data.values || data.values.length < 2) {
       console.warn('No data or insufficient rows in spreadsheet');
@@ -74,8 +74,8 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
     }
     
     const [headers, ...rows] = data.values;
-    console.log('Headers found:', headers);
-    console.log('Number of data rows:', rows.length);
+    // console.log('Headers found:', headers);
+    // console.log('Number of data rows:', rows.length);
     
     // Find column indices - be more flexible with column names
     const dateIndex = headers.findIndex((h: string) => 
@@ -198,7 +198,7 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
         const cleanedBalance = (rawBalance || '0').replace(/[^\d.-]/g, '');
         const parsedBalance = parseFloat(cleanedBalance) || 0;
         
-        console.log(`Row ${index}: Raw balance: "${rawBalance}", Cleaned: "${cleanedBalance}", Parsed: ${parsedBalance}`);
+        // console.log(`Row ${index}: Raw balance: "${rawBalance}", Cleaned: "${cleanedBalance}", Parsed: ${parsedBalance}`);
         
         return {
           bankDetails: paddedRow[0] || '',
