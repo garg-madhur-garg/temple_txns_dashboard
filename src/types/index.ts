@@ -61,6 +61,8 @@ export interface BankDetails {
   mainPurpose: string;
   currentBalance: number;
   accountNumber: string;
+  lastUpdatedDate?: string;
+  lastUpdatedTime?: string;
 }
 
 /**

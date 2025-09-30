@@ -20,6 +20,54 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
     return total;
   }, 0);
 
+  // Get the most recent last updated date and time from the data
+  const getLastUpdatedInfo = () => {
+    if (data.length === 0) return { date: '', time: '' };
+    
+    // Debug logging removed for production
+    
+    // Find the most recent update by looking at all bank details
+    const lastUpdatedEntries = data
+      .filter(bank => bank.lastUpdatedDate && bank.lastUpdatedTime)
+      .map(bank => {
+        // Parse the date format "27/09/25" to a proper Date object
+        const parseCustomDate = (dateStr: string, timeStr: string) => {
+          // Handle format like "27/09/25" (DD/MM/YY)
+          const [day, month, year] = dateStr.split('/');
+          const [hours, minutes] = timeStr.split(':');
+          
+          // Convert 2-digit year to 4-digit year (assuming 20xx)
+          const fullYear = parseInt(year) < 50 ? 2000 + parseInt(year) : 1900 + parseInt(year);
+          
+          // Create date object (month is 0-indexed in JavaScript)
+          return new Date(fullYear, parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes));
+        };
+        
+        const parsedDate = parseCustomDate(bank.lastUpdatedDate!, bank.lastUpdatedTime!);
+        
+        return {
+          date: bank.lastUpdatedDate!,
+          time: bank.lastUpdatedTime!,
+          timestamp: parsedDate.getTime()
+        };
+      })
+      .filter(entry => !isNaN(entry.timestamp))
+      .sort((a, b) => b.timestamp - a.timestamp);
+    
+    // Debug logging removed for production
+    
+    if (lastUpdatedEntries.length > 0) {
+      return {
+        date: lastUpdatedEntries[0].date,
+        time: lastUpdatedEntries[0].time
+      };
+    }
+    
+    return { date: '', time: '' };
+  };
+
+  const lastUpdated = getLastUpdatedInfo();
+
   const handleCopyDetails = (bankDetails: BankDetails) => {
     const detailsText = [
       `Bank Details: ${bankDetails.bankDetails}`,
@@ -50,6 +98,15 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
             </div>
           </div>
           <div className={styles.tableControls}>
+            <div className={styles.lastUpdatedInfo}>
+              <span className={styles.lastUpdatedLabel}>Last Updated:</span>
+              <span className={styles.lastUpdatedValue}>
+                {lastUpdated.date && lastUpdated.time 
+                  ? `${lastUpdated.date} at ${lastUpdated.time}`
+                  : 'No data available'
+                }
+              </span>
+            </div>
             <span className={styles.recordCount} aria-live="polite">
               {data.length} bank{data.length !== 1 ? 's' : ''}
             </span>

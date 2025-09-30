@@ -28,8 +28,8 @@ export const bankDetailsConfig: BankDetailsConfig = {
   spreadsheetId: process.env.REACT_APP_BANK_SPREADSHEET_ID || '',
   
   // Range that contains your bank details from environment variables (required)
-  // Format: 'SheetName!A:G' (adjust based on your sheet structure)
-  // Expected columns: Bank Details, IFSC Code, UPI IDs, Account Holder Name, Main Purpose, Current Balance, Account Number
+  // Format: 'SheetName!A:I' (adjust based on your sheet structure)
+  // Expected columns: Bank Details, IFSC Code, UPI IDs, Account Holder Name, Main Purpose, Current Balance, Account Number, Last Updated Date, Last Updated Time
   range: process.env.REACT_APP_BANK_SHEET_RANGE || ''
 };
 
@@ -49,7 +49,10 @@ if (!bankDetailsConfig.apiKey || !bankDetailsConfig.spreadsheetId || !bankDetail
  * E: Main Purpose (e.g., "Donations and Offerings")
  * F: Current Balance (numeric value, e.g., 50000)
  * G: Account Number (e.g., "1234567890")
+ * H: Last Updated Date (e.g., "2024-01-15")
+ * I: Last Updated Time (e.g., "14:30:00")
  * 
  * Note: The UPI IDs column can contain multiple UPI IDs separated by commas.
  * The system will automatically split them into an array.
+ * The Last Updated Date and Time are used to display when the bank details were last modified.
  */

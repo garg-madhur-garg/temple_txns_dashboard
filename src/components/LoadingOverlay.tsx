@@ -8,7 +8,7 @@ interface LoadingOverlayProps {
 
 export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ 
   visible, 
-  message = 'Syncing with Google Sheets...' 
+  message = 'Syncing...' 
 }) => {
   if (!visible) return null;
 
