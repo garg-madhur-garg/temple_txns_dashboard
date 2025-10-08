@@ -7,9 +7,56 @@
   overflow: hidden;
 }
 
+/* Alternating background colors for better visual distinction */
+.departmentCard.even {
+  background: #f8f9fa;
+  border-left: 3px solid #6c757d;
+}
+
+.departmentCard.odd {
+  background: #e9ecef;
+  border-left: 3px solid #495057;
+}
+
+/* Darker alternating colors for better contrast */
+.departmentCard.even {
+  background: #e3f2fd;
+  border-left: 3px solid #1976d2;
+}
+
+.departmentCard.odd {
+  background: #f3e5f5;
+  border-left: 3px solid #7b1fa2;
+}
+
 .departmentCard:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Clickable department cards */
+.departmentCard.clickable {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.departmentCard.clickable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.departmentCard.clickable::after {
+  content: '👆';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.departmentCard.clickable:hover::after {
+  opacity: 1;
 }
 
 .departmentCard.active {
@@ -37,6 +84,17 @@
   color: #333;
 }
 
+/* Enhanced text colors for alternating backgrounds */
+.departmentCard.even .departmentName {
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.departmentCard.odd .departmentName {
+  color: #6a1b9a;
+  font-weight: 600;
+}
+
 .statusBadge {
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
@@ -54,6 +112,19 @@
 .statusBadge.inactive {
   background: #f8d7da;
   color: #721c24;
+}
+
+/* Enhanced status badge colors for alternating backgrounds */
+.departmentCard.even .statusBadge.active {
+  background: #c8e6c9;
+  color: #1b5e20;
+  border: 1px solid #4caf50;
+}
+
+.departmentCard.odd .statusBadge.active {
+  background: #e1bee7;
+  color: #4a148c;
+  border: 1px solid #9c27b0;
 }
 
 .cardBody {

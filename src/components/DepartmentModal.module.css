@@ -1,0 +1,408 @@
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+/* Modal Content */
+.modalContent {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Modal Header */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+  border-radius: 12px 12px 0 0;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+/* Modal Body */
+.modalBody {
+  padding: 1.5rem;
+}
+
+.departmentInfo {
+  margin-bottom: 2rem;
+}
+
+.departmentName {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.description {
+  margin: 0;
+  color: #6c757d;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Income Section */
+.incomeSection {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  border-radius: 12px;
+  border: 2px solid #1976d2;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
+}
+
+.sectionTitle {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 0.5rem;
+  position: relative;
+}
+
+/* Main income section title - Blue theme */
+.incomeSection .sectionTitle {
+  color: #1976d2;
+  border-bottom-color: #1976d2;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Gaushala sub-section titles - Green theme */
+.subSection:nth-of-type(1) .sectionTitle {
+  color: #2e7d32;
+  border-bottom-color: #28a745;
+}
+
+/* Kitchen sub-section titles - Orange theme */
+.subSection:nth-of-type(2) .sectionTitle {
+  color: #e65100;
+  border-bottom-color: #ff9800;
+}
+
+/* Hundi sub-section titles - Purple theme */
+.subSection:nth-of-type(3) .sectionTitle {
+  color: #6a1b9a;
+  border-bottom-color: #9c27b0;
+}
+
+/* 4th sub-section titles - Teal theme */
+.subSection:nth-of-type(4) .sectionTitle {
+  color: #00695c;
+  border-bottom-color: #009688;
+}
+
+.incomeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.incomeCard {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.incomeCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.incomeLabel {
+  display: block;
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.incomeValue {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.incomeValue.total {
+  color: #28a745;
+  font-size: 1.2rem;
+}
+
+/* Sub-sections */
+.subSection {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gaushala sub-sections - Green theme */
+.subSection:nth-of-type(1) {
+  background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+  border-color: #28a745;
+}
+
+/* Kitchen sub-sections - Orange theme */
+.subSection:nth-of-type(2) {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffeaa7 100%);
+  border-color: #ff9800;
+}
+
+/* Hundi sub-sections - Purple theme */
+.subSection:nth-of-type(3) {
+  background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+  border-color: #9c27b0;
+}
+
+/* 4th sub-section - Teal theme (for Kitchen Hundi and Yamuna Hundi) */
+.subSection:nth-of-type(4) {
+  background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+  border-color: #009688;
+}
+
+.subSectionDescription {
+  margin: 0 0 1rem 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.subSectionIncomeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.subIncomeCard {
+  background: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.subIncomeCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.subIncomeCard .incomeLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.subIncomeCard .incomeValue {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.subIncomeCard .incomeValue.total {
+  color: #28a745;
+  font-size: 1.1rem;
+}
+
+/* Features Section */
+.featuresSection {
+  margin-bottom: 2rem;
+}
+
+.featuresList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+.featureItem {
+  background: #e3f2fd;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border-left: 3px solid #1976d2;
+  font-size: 0.9rem;
+  color: #1565c0;
+  font-weight: 500;
+}
+
+/* Status Section */
+.statusSection {
+  margin-bottom: 1rem;
+}
+
+.statusInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.statusLabel {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.statusBadge.active {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #28a745;
+}
+
+.statusBadge.inactive {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #dc3545;
+}
+
+/* Modal Footer */
+.modalFooter {
+  padding: 1.5rem;
+  border-top: 1px solid #e9ecef;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.closeModalButton {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeModalButton:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modalContent {
+    margin: 0.5rem;
+    max-height: 95vh;
+  }
+  
+  .modalHeader {
+    padding: 1rem;
+  }
+  
+  .modalBody {
+    padding: 1rem;
+  }
+  
+  .modalFooter {
+    padding: 1rem;
+  }
+  
+  .incomeGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .featuresList {
+    grid-template-columns: 1fr;
+  }
+  
+  .subSectionIncomeGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .statusInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

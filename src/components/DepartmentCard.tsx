@@ -28,16 +28,33 @@ import styles from './DepartmentCard.module.css';
  * @param {DepartmentCardProps} props - Component props containing department name and totals
  * @returns {JSX.Element} Rendered department card
  */
-export const DepartmentCard: React.FC<DepartmentCardProps> = ({ name, totals }) => {
+export const DepartmentCard: React.FC<DepartmentCardProps> = ({ name, totals, index = 0, onClick }) => {
+  // Check if this department should be clickable
+  const clickableDepartments = ['Gaushala', 'Kitchen', 'Hundi', 'Other Donations'];
+  const isClickable = clickableDepartments.includes(name);
   // Determine department status based on data availability
   const status = totals.hasData ? 'active' : 'inactive';
   const statusText = totals.hasData ? 'Active' : 'No Data';
   
+  // Apply alternating colors based on index
+  const alternatingClass = index % 2 === 0 ? 'even' : 'odd';
+  
   // Debug logging to help identify issues
   // console.log(`Department ${name}: hasData=${totals.hasData}, total=${totals.total}, cash=${totals.cash}, online=${totals.online}`);
 
+  // Handle click event
+  const handleClick = () => {
+    if (isClickable && onClick) {
+      onClick(name);
+    }
+  };
+
   return (
-    <div className={`${styles.departmentCard} ${styles[status]}`}>
+    <div 
+      className={`${styles.departmentCard} ${styles[status]} ${styles[alternatingClass]} ${isClickable ? styles.clickable : ''}`}
+      onClick={handleClick}
+      style={{ cursor: isClickable ? 'pointer' : 'default' }}
+    >
       <div className={styles.cardHeader}>
         <h4 className={styles.departmentName}>{name}</h4>
         <span className={`${styles.statusBadge} ${styles[status]}`}>

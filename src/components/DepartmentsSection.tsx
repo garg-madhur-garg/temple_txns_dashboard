@@ -16,10 +16,11 @@
  * @lastUpdated 2025
  */
 
-import React from 'react';
-import { IncomeRecord, ALL_DEPARTMENTS } from '../types';
+import React, { useState } from 'react';
+import { IncomeRecord, ALL_DEPARTMENTS, DepartmentTotals } from '../types';
 import { dataProcessingService } from '../services/dataProcessingService';
 import { DepartmentCard } from './DepartmentCard';
+import { DepartmentModal } from './DepartmentModal';
 import styles from './DepartmentsSection.module.css';
 
 /**
@@ -42,6 +43,27 @@ interface DepartmentsSectionProps {
  * @returns {JSX.Element} Rendered departments section
  */
 export const DepartmentsSection: React.FC<DepartmentsSectionProps> = ({ data }) => {
+  // State for modal
+  const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
+  const [modalTotals, setModalTotals] = useState<DepartmentTotals | null>(null);
+
+  // Handle department card click
+  const handleDepartmentClick = (departmentName: string) => {
+    // Use main department totals calculation for departments with sub-sections
+    const isMainDepartment = ['Gaushala', 'Kitchen', 'Hundi', 'Other Donations'].includes(departmentName);
+    const totals = isMainDepartment 
+      ? dataProcessingService.calculateMainDepartmentTotals(data, departmentName)
+      : dataProcessingService.calculateDepartmentTotals(data, departmentName);
+    
+    setSelectedDepartment(departmentName);
+    setModalTotals(totals);
+  };
+
+  // Handle modal close
+  const handleModalClose = () => {
+    setSelectedDepartment(null);
+    setModalTotals(null);
+  };
   return (
     <section className={styles.departmentsSection} aria-labelledby="departments-heading">
       <div className={styles.card}>
@@ -50,19 +72,37 @@ export const DepartmentsSection: React.FC<DepartmentsSectionProps> = ({ data }) 
         </div>
         <div className={styles.cardBody}>
           <div className={styles.departmentsGrid}>
-            {ALL_DEPARTMENTS.map((departmentName) => {
-              const totals = dataProcessingService.calculateDepartmentTotals(data, departmentName);
+            {ALL_DEPARTMENTS.map((departmentName, index) => {
+              // Use main department totals calculation for departments with sub-sections
+              const isMainDepartment = ['Gaushala', 'Kitchen', 'Hundi', 'Other Donations'].includes(departmentName);
+              const totals = isMainDepartment 
+                ? dataProcessingService.calculateMainDepartmentTotals(data, departmentName)
+                : dataProcessingService.calculateDepartmentTotals(data, departmentName);
+              
               return (
                 <DepartmentCard
                   key={departmentName}
                   name={departmentName}
                   totals={totals}
+                  index={index}
+                  onClick={handleDepartmentClick}
                 />
               );
             })}
           </div>
         </div>
       </div>
+      
+      {/* Department Modal */}
+      {selectedDepartment && modalTotals && (
+        <DepartmentModal
+          departmentName={selectedDepartment}
+          totals={modalTotals}
+          data={data}
+          isOpen={!!selectedDepartment}
+          onClose={handleModalClose}
+        />
+      )}
     </section>
   );
 };

@@ -174,6 +174,8 @@ export interface KPICardProps {
 export interface DepartmentCardProps {
   name: string;
   totals: DepartmentTotals;
+  index?: number;
+  onClick?: (departmentName: string) => void;
 }
 
 export interface ChartCardProps {
@@ -245,20 +247,21 @@ export interface Message {
 }
 
 // Constants
-// Updated department names and reordered as requested:
-// - Govindas Res -> Govindas (simplified name)
-// - Govindas Stall -> Vrinda's Food Court (new name)
-// - Snacks Shop -> Gopal's Sweet Shop (new name)
-// New priority order: Guest House, Govindas, Vrinda's Food Court, Seva Office, Gift Shop, Gopal's Sweet Shop, Railway Book Stall, Kitchen
+// Department order as specified by user:
+// Boat, Guest House, Govindas, Vrinda's Food Court, Gift Shop, Railway Shop, Gaushala, Kitchen, Gopal's Sweet Shop, Hundi, Nitya Seva, Other Donations
 export const ALL_DEPARTMENTS = [
+  "Boat",                        // Boat services
   "Guest House",                 // Accommodation services
-  "Govindas",                    // Main restaurant (formerly Govindas Res)
-  "Vrinda's Food Court",         // Food court (formerly Govindas Stall)
-  "Seva Office",                 // Administrative office
+  "Govindas",                    // Govindas restaurant
+  "Vrinda's Food Court",         // Food court
   "Gift Shop",                   // Retail merchandise
-  "Gopal's Sweet Shop",          // Sweet shop (formerly Snacks Shop)
-  "Railway Book Stall",          // Book sales
-  "Kitchen"                      // Food preparation (currently inactive)
+  "Railway BBT",                // Railway shop services
+  "Gaushala",                    // Gaushala department
+  "Kitchen",                     // Food preparation
+  "Gopal's Sweet Shop",          // Sweet shop
+  "Hundi",                       // Hundi department
+  "Nitya Seva",                  // Nitya Seva department
+  "Other Donations"              // Other donations including PWS and general donations
 ] as const;
 
 export type DepartmentName = typeof ALL_DEPARTMENTS[number];

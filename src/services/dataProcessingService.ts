@@ -146,6 +146,50 @@ export class DataProcessingService {
   }
 
   /**
+   * Calculate totals for main departments by aggregating their sub-sections
+   */
+  calculateMainDepartmentTotals(data: IncomeRecord[], mainDepartmentName: string): DepartmentTotals {
+    let totalCash = 0;
+    let totalOnline = 0;
+    let hasData = false;
+
+    // Define sub-sections for each main department
+    const subSections: Record<string, string[]> = {
+      'Gaushala': ['Gaushala', 'Gaushala Seva Office', 'Gaushala Hundi'],
+      'Kitchen': ['Kitchen', 'Kitchen (Journey Prasad)', 'Kitchen Seva Office', 'Kitchen Hundi'],
+      'Hundi': ['Hundi', 'Temple Hundi', 'Jagannath Hundi', 'Yamuna Hundi'],
+      'Other Donations': ['Other Donations', 'General Donations', 'PWS Donations']
+    };
+
+    // Get sub-sections for this main department, or just the department itself if no sub-sections
+    const departmentsToSum = subSections[mainDepartmentName] || [mainDepartmentName];
+
+    // Sum up all sub-sections
+    departmentsToSum.forEach(deptName => {
+      const deptData = data.filter(record => record.department === deptName);
+      const deptCash = deptData.reduce((sum, record) => sum + record.cash, 0);
+      const deptOnline = deptData.reduce((sum, record) => sum + record.online, 0);
+      
+      totalCash += deptCash;
+      totalOnline += deptOnline;
+      
+      // If any sub-section has data, mark as having data
+      if (deptData.length > 0 && (deptCash > 0 || deptOnline > 0)) {
+        hasData = true;
+      }
+    });
+
+    const totalIncome = totalCash + totalOnline;
+    
+    return {
+      cash: totalCash,
+      online: totalOnline,
+      total: totalIncome,
+      hasData: hasData
+    };
+  }
+
+  /**
    * Filter data by date range
    * Enhanced to support custom date ranges
    */
