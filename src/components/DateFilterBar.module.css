@@ -162,8 +162,7 @@
   }
 
   .filterInfo {
-    margin-left: 0;
-    text-align: center;
+    display: none; /* Hide filter info on small screens */
   }
 
   .quickFilters {
