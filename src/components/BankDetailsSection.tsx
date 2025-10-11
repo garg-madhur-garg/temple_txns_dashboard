@@ -68,13 +68,24 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
 
   const lastUpdated = getLastUpdatedInfo();
 
-  const handleCopyDetails = (bankDetails: BankDetails) => {
+  const handleCopyDetails = (bankDetails: BankDetails, event: React.MouseEvent<HTMLButtonElement>) => {
+    const button = event.currentTarget;
+    
+    // Add click effect immediately
+    button.classList.add(styles.clicked);
+    
+    // Remove the effect after animation
+    setTimeout(() => {
+      button.classList.remove(styles.clicked);
+    }, 300);
+    
     const detailsText = [
       `Bank Details: ${bankDetails.bankDetails}`,
       `IFSC Code: ${bankDetails.ifscCode}`,
-      `Account Number: ${bankDetails.accountNumber}`,
       `UPI IDs: ${bankDetails.upiIds.join(', ')}`,
-      `Account Holder: ${bankDetails.accountHolderName}`
+      `Account Holder: ${bankDetails.accountHolderName}`,
+      `Main Purpose: ${bankDetails.mainPurpose}`,
+      `Current Balance: ${dataProcessingService.formatCurrency(bankDetails.currentBalance)}`
     ].join('\n');
 
     navigator.clipboard.writeText(detailsText).then(() => {
@@ -186,14 +197,14 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
                       </td>
                       <td className={styles.dataCell}>
                         <div className={styles.actionsCell}>
-                          <button
-                            className={`${styles.btn} ${styles.btnOutline} ${styles.btnSm}`}
-                            onClick={() => handleCopyDetails(bankDetails)}
-                            aria-label={`Copy all details for ${bankDetails.bankDetails}`}
-                            title="Copy all bank details"
-                          >
-                            📋 Copy All
-                          </button>
+                           <button
+                             className={`${styles.btn} ${styles.btnOutline} ${styles.btnSm}`}
+                             onClick={(event) => handleCopyDetails(bankDetails, event)}
+                             aria-label={`Copy all details for ${bankDetails.bankDetails}`}
+                             title="Copy all bank details"
+                           >
+                             📋 Copy All
+                           </button>
                         </div>
                       </td>
                     </tr>

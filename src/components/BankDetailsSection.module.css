@@ -102,7 +102,7 @@
 .dataTable {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
 }
 
 .dataTable th,
@@ -200,14 +200,14 @@
   color: var(--color-text);
   max-width: 150px;
   word-wrap: break-word;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
 }
 
 .ifscCell {
   font-family: var(--font-family-mono);
   font-weight: 600;
   color: var(--color-primary);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-lg);
   white-space: nowrap;
 }
 
@@ -234,7 +234,7 @@
 
 .upiItem {
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   color: var(--color-text);
   word-break: break-all;
   display: block;
@@ -252,7 +252,7 @@
   color: var(--color-text);
   max-width: 120px;
   word-wrap: break-word;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
 }
 
 .purposeCell {
@@ -260,7 +260,7 @@
   max-width: 150px;
   word-wrap: break-word;
   font-style: italic;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
 }
 
 .balanceCell {
@@ -313,6 +313,35 @@
   background: var(--color-secondary);
 }
 
+/* Click effect animation */
+.btnOutline.clicked {
+  transform: scale(0.95);
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+  transition: all 0.15s ease-in-out;
+}
+
+.btnOutline.clicked::after {
+  content: " ✓";
+  animation: checkmark 0.3s ease-in-out;
+}
+
+@keyframes checkmark {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .btnSecondary {
   background: var(--color-secondary);
   color: white;
@@ -325,7 +354,7 @@
 
 .btnSm {
   padding: var(--space-4) var(--space-8);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   border-radius: var(--radius-sm);
 }
 
@@ -363,6 +392,7 @@
   .bankDetailsCell,
   .purposeCell {
     max-width: 120px;
+    font-size: var(--font-size-sm);
   }
   
   .upiCell {
@@ -371,7 +401,7 @@
   }
   
   .ifscCell {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
   }
   
   .balanceCell {
@@ -409,6 +439,7 @@
   .bankDetailsCell,
   .purposeCell {
     max-width: 100px;
+    font-size: var(--font-size-sm);
   }
   
   .upiCell {
@@ -452,6 +483,7 @@
   .bankDetailsCell,
   .purposeCell {
     max-width: 80px;
+    font-size: var(--font-size-xs);
   }
   
   .upiCell {

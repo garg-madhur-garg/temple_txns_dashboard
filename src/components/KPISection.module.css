@@ -6,6 +6,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--space-20);
+  margin-bottom: var(--space-20);
+}
+
+.kpiGrid:last-child {
+  margin-bottom: 0;
 }
 
 /* Responsive Design */
