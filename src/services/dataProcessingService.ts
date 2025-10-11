@@ -156,9 +156,9 @@ export class DataProcessingService {
     // Define sub-sections for each main department
     const subSections: Record<string, string[]> = {
       'Gaushala': ['Gaushala', 'Gaushala Seva Office', 'Gaushala Hundi'],
-      'Kitchen': ['Kitchen', 'Kitchen (Journey Prasad)', 'Kitchen Seva Office', 'Kitchen Hundi'],
+      'Kitchen': ['Kitchen', 'Kitchen (Journey Prasad + Coupan)', 'Kitchen Seva Office', 'Kitchen Hundi'],
       'Hundi': ['Hundi', 'Temple Hundi', 'Jagannath Hundi', 'Yamuna Hundi'],
-      'Other Donations': ['Other Donations', 'General Donations', 'PWS Donations']
+      'Other Donations': ['Other Donations', 'General', 'PWS']
     };
 
     // Get sub-sections for this main department, or just the department itself if no sub-sections

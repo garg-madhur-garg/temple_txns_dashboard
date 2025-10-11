@@ -231,13 +231,13 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
            {content.hasSubSections && departmentName === 'Kitchen' && (
              <>
                <div className={styles.subSection}>
-                 <h4 className={styles.sectionTitle}>Kitchen (Journey Prasad)</h4>
+                 <h4 className={styles.sectionTitle}>Kitchen (Journey Prasad + Coupan)</h4>
                  <p className={styles.subSectionDescription}>
                    Special prasad preparation and distribution for devotees' spiritual journeys.
                  </p>
                  <div className={styles.subSectionIncomeGrid}>
                    {(() => {
-                     const journeyPrasadTotals = getSubSectionTotals('Kitchen (Journey Prasad)');
+                     const journeyPrasadTotals = getSubSectionTotals('Kitchen (Journey Prasad + Coupan)');
                      return (
                        <>
                          <div className={styles.subIncomeCard}>
@@ -445,13 +445,13 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
            {content.hasSubSections && departmentName === 'Other Donations' && (
              <>
                <div className={styles.subSection}>
-                 <h4 className={styles.sectionTitle}>General Donations</h4>
+                 <h4 className={styles.sectionTitle}>General</h4>
                  <p className={styles.subSectionDescription}>
                    General donation collections for various temple activities and maintenance.
                  </p>
                  <div className={styles.subSectionIncomeGrid}>
                    {(() => {
-                     const generalDonationsTotals = getSubSectionTotals('General Donations');
+                     const generalDonationsTotals = getSubSectionTotals('General');
                      return (
                        <>
                          <div className={styles.subIncomeCard}>
@@ -479,13 +479,13 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
                </div>
 
                <div className={styles.subSection}>
-                 <h4 className={styles.sectionTitle}>PWS Donations</h4>
+                 <h4 className={styles.sectionTitle}>PWS</h4>
                  <p className={styles.subSectionDescription}>
                    Special donation collections for PWS (Prabhu Wala Seva) related activities and services.
                  </p>
                  <div className={styles.subSectionIncomeGrid}>
                    {(() => {
-                     const pwsDonationsTotals = getSubSectionTotals('PWS Donations');
+                     const pwsDonationsTotals = getSubSectionTotals('PWS');
                      return (
                        <>
                          <div className={styles.subIncomeCard}>

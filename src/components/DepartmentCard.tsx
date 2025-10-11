@@ -34,7 +34,6 @@ export const DepartmentCard: React.FC<DepartmentCardProps> = ({ name, totals, in
   const isClickable = clickableDepartments.includes(name);
   // Determine department status based on data availability
   const status = totals.hasData ? 'active' : 'inactive';
-  const statusText = totals.hasData ? 'Active' : 'No Data';
   
   // Apply alternating colors based on index
   const alternatingClass = index % 2 === 0 ? 'even' : 'odd';
@@ -57,9 +56,6 @@ export const DepartmentCard: React.FC<DepartmentCardProps> = ({ name, totals, in
     >
       <div className={styles.cardHeader}>
         <h4 className={styles.departmentName}>{name}</h4>
-        <span className={`${styles.statusBadge} ${styles[status]}`}>
-          {statusText}
-        </span>
       </div>
       <div className={styles.cardBody}>
         <div className={styles.incomeBreakdown}>
