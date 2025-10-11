@@ -70,8 +70,8 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
         <KPICard
           icon="💰"
           value={dataProcessingService.formatCurrency(kpis.totalRevenue)}
-          label="Total Revenue"
-          growth="--"
+          label="Total Income"
+          // growth="--"
         />
         <KPICard
           icon="💵"
@@ -88,8 +88,8 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
         <KPICard
           icon="🏦"
           value={dataProcessingService.formatCurrency(totalCurrentBalance)}
-          label="Total Bank Balance"
-          secondary={`${includedAccountsCount} Bank Accounts + ISKCON Empower Prayagraj (excluding ISKCON Empower, SBI, BoB, IDBI)`}
+          label="Total Prayagraj Bank Balance"
+          secondary={`${includedAccountsCount} Bank Accounts (excluding ISKCON Empower, SBI, BoB, IDBI) + ISKCON Empower Prayagraj`}
         />
       </div>
 
@@ -98,14 +98,14 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
         <KPICard
           icon="🏛️"
           value={formatManualKpiCurrency(manualKpiConfig.iskconEmpowerOtherCentersBalance)}
-          label="ISKCON Empower Other Centers Balance"
-          secondary="Other centers fund balance"
+          label="ISKCON Empower Other Centers Fund"
+          secondary="Available with us"
         />
         <KPICard
           icon="🕉️"
           value={formatManualKpiCurrency(manualKpiConfig.iskconEmpowerPrayagrajBalance)}
-          label="ISKCON Empower Prayagraj Balance"
-          secondary="Special fund balance"
+          label="ISKCON Empower Prayagraj Fund"
+          // secondary="Special fund balance"
         />
         {/* <KPICard
           icon="🏛️"
