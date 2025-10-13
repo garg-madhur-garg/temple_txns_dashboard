@@ -190,8 +190,8 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
       const rows = data.values.slice(1);
       
       return rows.map((row: any[], index: number) => {
-        // Ensure we have at least 9 columns (A through I)
-        const paddedRow = [...row, '', '', '', '', '', '', '', '', ''];
+        // Ensure we have at least 10 columns (A through J)
+        const paddedRow = [...row, '', '', '', '', '', '', '', '', '', ''];
         
         // Debug logging for balance parsing
         const rawBalance = paddedRow[5];
@@ -209,7 +209,8 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
           currentBalance: parsedBalance,
           accountNumber: paddedRow[6] || '',
           lastUpdatedDate: paddedRow[7] || '',
-          lastUpdatedTime: paddedRow[8] || ''
+          lastUpdatedTime: paddedRow[8] || '',
+          bankName: paddedRow[9] || ''
         };
       });
     } catch (error) {

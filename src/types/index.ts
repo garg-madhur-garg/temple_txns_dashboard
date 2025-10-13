@@ -63,6 +63,7 @@ export interface BankDetails {
   accountNumber: string;
   lastUpdatedDate?: string;
   lastUpdatedTime?: string;
+  bankName?: string;
 }
 
 /**
