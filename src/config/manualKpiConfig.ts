@@ -11,7 +11,6 @@
  */
 
 export interface ManualKpiConfig {
-  iskconEmpowerOtherCentersBalance: number;
   iskconEmpowerPrayagrajBalance: number;
 }
 
@@ -22,9 +21,6 @@ export interface ManualKpiConfig {
  * Example: 1000000 = ₹10,00,000.00
  */
 export const manualKpiConfig: ManualKpiConfig = {
-  // ISKCON Empower Other Centers Balance
-  iskconEmpowerOtherCentersBalance: 3329546.56 - 1244020,
-  
   // ISKCON Empower Prayagraj Balance
   iskconEmpowerPrayagrajBalance: 1244020
 };
