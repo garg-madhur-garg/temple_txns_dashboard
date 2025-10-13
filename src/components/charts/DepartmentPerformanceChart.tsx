@@ -104,27 +104,48 @@ export const DepartmentPerformanceChart: React.FC<DepartmentPerformanceChartProp
 
     // Apply department filter - if no departments selected, show all
     if (selectedDepartments.length > 0) {
+      // Define sub-sections for main departments
+      const subSections: Record<string, string[]> = {
+        'Gaushala': ['Gaushala', 'Gaushala Seva Office', 'Gaushala Hundi'],
+        'Kitchen': ['Kitchen', 'Kitchen (Journey Prasad + Coupan)', 'Kitchen Seva Office', 'Kitchen Hundi'],
+        'Hundi': ['Hundi', 'Temple Hundi', 'Jagannath Hundi', 'Yamuna Hundi'],
+        'Other Donations': ['Other Donations', 'General', 'PWS']
+      };
+      
+      // Expand selected departments to include their sub-sections
+      const expandedDepartments = new Set<string>();
+      selectedDepartments.forEach(dept => {
+        expandedDepartments.add(dept);
+        if (subSections[dept]) {
+          subSections[dept].forEach(subDept => expandedDepartments.add(subDept));
+        }
+      });
+      
       filteredData = filteredData.filter(record => 
-        selectedDepartments.includes(record.department)
+        expandedDepartments.has(record.department)
       );
     }
     // If no departments selected, show all departments (no filtering)
 
-    // Calculate department totals
-    const departmentTotals = ALL_DEPARTMENTS.map(dept => {
-      const deptData = filteredData.filter(record => record.department === dept);
-      const totalCash = Number(deptData.reduce((sum, record) => sum + record.cash, 0).toFixed(2));
-      const totalOnline = Number(deptData.reduce((sum, record) => sum + record.online, 0).toFixed(2));
-      const totalIncome = Number((totalCash + totalOnline).toFixed(2));
+    // Determine which departments to show based on filter
+    const departmentsToShow = selectedDepartments.length > 0 ? selectedDepartments : ALL_DEPARTMENTS;
+    
+    // Calculate department totals using the same logic as Department Section
+    const departmentTotals = departmentsToShow.map(dept => {
+      // Use main department totals calculation for departments with sub-sections
+      const isMainDepartment = ['Gaushala', 'Kitchen', 'Hundi', 'Other Donations'].includes(dept);
+      const totals = isMainDepartment 
+        ? dataProcessingService.calculateMainDepartmentTotals(filteredData, dept)
+        : dataProcessingService.calculateDepartmentTotals(filteredData, dept);
       
       return {
         department: dept,
-        total: totalIncome,
-        cash: totalCash,
-        online: totalOnline,
-        hasData: deptData.length > 0
+        total: Number(totals.total.toFixed(2)),
+        cash: Number(totals.cash.toFixed(2)),
+        online: Number(totals.online.toFixed(2)),
+        hasData: totals.hasData
       };
-    }).filter(dept => dept.hasData && dept.total > 0);
+    });
 
     // Sort by total income (highest first)
     departmentTotals.sort((a, b) => b.total - a.total);
@@ -154,11 +175,8 @@ export const DepartmentPerformanceChart: React.FC<DepartmentPerformanceChartProp
 
     const chartData = processData();
     
-    if (chartData.data.every(value => value === 0)) {
-      // Show empty state
-      ctx.clearRect(0, 0, chartRef.current.width, chartRef.current.height);
-      return;
-    }
+    // Always show the chart, even if all values are zero
+    // This ensures all departments are visible
 
     // Generate colors for departments
     const colors = [

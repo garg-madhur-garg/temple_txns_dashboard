@@ -34,6 +34,31 @@ const shouldExcludeAccountFromTotal = (bank: BankDetails): boolean => {
   return hasIskconEmpower || hasSbi || hasBob || hasIdbi;
 };
 
+/**
+ * Helper function to extract ISKCON Empower balance from bank details
+ */
+const getIskconEmpowerBalance = (bankDetails: BankDetails[]): number => {
+  return bankDetails.reduce((total, bank) => {
+    const bankDetailsText = bank.bankDetails?.toLowerCase() || '';
+    const mainPurpose = bank.mainPurpose?.toLowerCase() || '';
+    const accountHolder = bank.accountHolderName?.toLowerCase() || '';
+    
+    // Check if this is an ISKCON Empower account
+    const isIskconEmpower = bankDetailsText.includes('iskcon empower') || 
+                           mainPurpose.includes('iskcon empower') ||
+                           accountHolder.includes('iskcon empower');
+    
+    if (isIskconEmpower) {
+      const balance = bank.currentBalance;
+      if (balance !== undefined && balance !== null && !isNaN(Number(balance))) {
+        return total + Number(balance);
+      }
+    }
+    
+    return total;
+  }, 0);
+};
+
 export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }) => {
   const kpis = dataProcessingService.calculateKPIs(data);
   
@@ -54,6 +79,10 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
     
     return total + Number(balance);
   }, 0);
+  
+  // Calculate ISKCON Empower balances dynamically from bank details
+  const totalIskconEmpowerBalance = getIskconEmpowerBalance(bankDetails);
+  const iskconEmpowerOtherCentersBalance = totalIskconEmpowerBalance - manualKpiConfig.iskconEmpowerPrayagrajBalance;
   
   // Add ISKCON EMPOWER PRAYAGRAJ BALANCE to the total
   const totalCurrentBalance = bankAccountsBalance + manualKpiConfig.iskconEmpowerPrayagrajBalance;
@@ -97,7 +126,7 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
       <div className={styles.kpiGrid}>
         <KPICard
           icon="🏛️"
-          value={formatManualKpiCurrency(manualKpiConfig.iskconEmpowerOtherCentersBalance)}
+          value={dataProcessingService.formatCurrency(iskconEmpowerOtherCentersBalance)}
           label="ISKCON Empower Other Centers Fund"
           secondary="Available with us"
         />
