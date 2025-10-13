@@ -80,12 +80,12 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
     }, 300);
     
     const detailsText = [
-      `Bank Details: ${bankDetails.bankDetails}`,
+      `Bank Name: ${bankDetails.bankName || bankDetails.bankDetails}`,
+      `Account Number: ${bankDetails.accountNumber}`,
       `IFSC Code: ${bankDetails.ifscCode}`,
-      `UPI IDs: ${bankDetails.upiIds.join(', ')}`,
       `Account Holder: ${bankDetails.accountHolderName}`,
-      `Main Purpose: ${bankDetails.mainPurpose}`,
-      `Current Balance: ${dataProcessingService.formatCurrency(bankDetails.currentBalance)}`
+      ``,
+      `UPI ID: ${bankDetails.upiIds.join(', ')}`
     ].join('\n');
 
     navigator.clipboard.writeText(detailsText).then(() => {
