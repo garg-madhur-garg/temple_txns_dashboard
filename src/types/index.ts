@@ -52,6 +52,7 @@ export interface IncomeRecord {
  * @property {string} mainPurpose - Main purpose of the account
  * @property {number} currentBalance - Current balance in the account
  * @property {string} accountNumber - Bank account number
+ * @property {string} bankName - Bank name (required field)
  */
 export interface BankDetails {
   bankDetails: string;
@@ -63,7 +64,7 @@ export interface BankDetails {
   accountNumber: string;
   lastUpdatedDate?: string;
   lastUpdatedTime?: string;
-  bankName?: string;
+  bankName: string;
 }
 
 /**
