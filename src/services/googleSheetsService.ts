@@ -210,7 +210,7 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
           accountNumber: paddedRow[6] || '',
           lastUpdatedDate: paddedRow[7] || '',
           lastUpdatedTime: paddedRow[8] || '',
-          bankName: paddedRow[9] || ''
+          bankName: paddedRow[9] || paddedRow[0] || ''
         };
       });
     } catch (error) {
