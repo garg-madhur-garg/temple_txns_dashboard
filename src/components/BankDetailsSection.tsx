@@ -80,7 +80,7 @@ export const BankDetailsSection: React.FC<BankDetailsSectionProps> = ({ data }) 
     }, 300);
     
     const detailsText = [
-      `Bank Name: ${bankDetails.bankName || bankDetails.bankDetails}`,
+      `Bank Name: ${bankDetails.bankName}`,
       `Account Number: ${bankDetails.accountNumber}`,
       `IFSC Code: ${bankDetails.ifscCode}`,
       `Account Holder: ${bankDetails.accountHolderName}`,
