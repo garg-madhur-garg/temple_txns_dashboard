@@ -121,12 +121,40 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
       dailyData[record.date].total += record.cash + record.online;
     });
 
-    const sortedDates = Object.keys(dailyData).sort();
+    // Sort dates chronologically instead of alphabetically
+    const sortedDates = Object.keys(dailyData).sort((a, b) => {
+      // Parse dates in M/D/YY format
+      const parseDate = (dateStr: string): Date => {
+        const [month, day, year] = dateStr.split('/').map(num => parseInt(num, 10));
+        // Convert 2-digit year to 4-digit year (assuming 20xx for years < 50, 19xx otherwise)
+        const fullYear = year < 50 ? 2000 + year : 1900 + year;
+        return new Date(fullYear, month - 1, day);
+      };
+      
+      const dateA = parseDate(a);
+      const dateB = parseDate(b);
+      return dateA.getTime() - dateB.getTime();
+    });
+    
+    // Check if dates span multiple years
+    const parseDateForLabel = (dateStr: string): Date => {
+      const [month, day, year] = dateStr.split('/').map(num => parseInt(num, 10));
+      const fullYear = year < 50 ? 2000 + year : 1900 + year;
+      return new Date(fullYear, month - 1, day);
+    };
+    
+    const firstDate = sortedDates.length > 0 ? parseDateForLabel(sortedDates[0]) : null;
+    const lastDate = sortedDates.length > 0 ? parseDateForLabel(sortedDates[sortedDates.length - 1]) : null;
+    const spansMultipleYears = firstDate && lastDate && firstDate.getFullYear() !== lastDate.getFullYear();
     
     return {
       labels: sortedDates.map(date => {
-        // Format date as MM/DD for better readability
-        const [month, day] = date.split('/');
+        // Format date: include year if dates span multiple years, otherwise just MM/DD
+        const [month, day, year] = date.split('/');
+        if (spansMultipleYears) {
+          const fullYear = parseInt(year) < 50 ? 2000 + parseInt(year) : 1900 + parseInt(year);
+          return `${month}/${day}/${fullYear.toString().slice(-2)}`;
+        }
         return `${month}/${day}`;
       }),
       cashData: sortedDates.map(date => Number(dailyData[date].cash.toFixed(2))),

@@ -200,6 +200,7 @@ export interface GoogleSheetsService {
   testConnection: (config: GoogleSheetsConfig) => Promise<boolean>;
   fetchData: (config: GoogleSheetsConfig) => Promise<IncomeRecord[]>;
   fetchBankDetails: (config: BankDetailsConfig) => Promise<BankDetails[]>;
+  fetchSingleValue: (config: BankDetailsConfig) => Promise<number>;
 }
 
 export interface DataProcessingService {
