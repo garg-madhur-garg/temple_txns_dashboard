@@ -303,7 +303,8 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
                   className={`${styles.formControl} ${styles.formControlInline}`}
                   value={startDate}
                   onChange={(e) => handleStartDateChange(e.target.value)}
-                  max={endDate || undefined}
+                  min={getFirstAndLastDates?.first || undefined}
+                  max={getFirstAndLastDates?.last || (endDate || undefined)}
                   readOnly={currentFilter !== 'specific' && currentFilter !== 'all'}
                   aria-label="Select start date for date range"
                 />
@@ -318,7 +319,8 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
                   className={`${styles.formControl} ${styles.formControlInline}`}
                   value={endDate}
                   onChange={(e) => handleEndDateChange(e.target.value)}
-                  min={startDate || undefined}
+                  min={getFirstAndLastDates?.first || (startDate || undefined)}
+                  max={getFirstAndLastDates?.last || undefined}
                   readOnly={currentFilter !== 'specific' && currentFilter !== 'all'}
                   aria-label="Select end date for date range"
                 />

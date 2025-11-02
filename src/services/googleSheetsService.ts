@@ -42,7 +42,6 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
     
     try {
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/${config.range}?key=${config.apiKey}`;
-      // console.log('Fetching data from:', url);
       
       const response = await fetch(url);
       
@@ -53,7 +52,6 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
       }
       
       const data = await response.json();
-      // console.log('Raw Google Sheets data:', data);
       return this.parseGoogleSheetsData(data);
       
     } catch (error) {
@@ -66,16 +64,12 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
    * Parse Google Sheets API response into IncomeRecord array
    */
   private parseGoogleSheetsData(data: any): IncomeRecord[] {
-    // console.log('Parsing Google Sheets data:', data);
-    
     if (!data.values || data.values.length < 2) {
       console.warn('No data or insufficient rows in spreadsheet');
       return [];
     }
     
     const [headers, ...rows] = data.values;
-    // console.log('Headers found:', headers);
-    // console.log('Number of data rows:', rows.length);
     
     // Find column indices - be more flexible with column names
     const dateIndex = headers.findIndex((h: string) => 
@@ -186,19 +180,13 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
         return [];
       }
       
-      // Skip header row and process data
       const rows = data.values.slice(1);
       
-      return rows.map((row: any[], index: number) => {
-        // Ensure we have at least 10 columns (A through J)
+      return rows.map((row: any[]) => {
         const paddedRow = [...row, '', '', '', '', '', '', '', '', '', ''];
-        
-        // Debug logging for balance parsing
         const rawBalance = paddedRow[5];
         const cleanedBalance = (rawBalance || '0').replace(/[^\d.-]/g, '');
         const parsedBalance = parseFloat(cleanedBalance) || 0;
-        
-        // console.log(`Row ${index}: Raw balance: "${rawBalance}", Cleaned: "${cleanedBalance}", Parsed: ${parsedBalance}`);
         
         return {
           bankDetails: paddedRow[0] || '',
@@ -215,6 +203,59 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
       });
     } catch (error) {
       console.error('Error fetching bank details:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch a single numeric value from Google Sheets
+   * Used for fetching KPI values from a specific cell or the last value in a column
+   */
+  async fetchSingleValue(config: BankDetailsConfig): Promise<number> {
+    try {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/${config.range}?key=${config.apiKey}`;
+      
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!data.values || data.values.length === 0) {
+        console.warn('No data found in the specified range, returning 0');
+        return 0;
+      }
+      
+      const isColumnRange = config.range.includes(':') && config.range.split('!')[1]?.match(/^[A-Z]+:[A-Z]+$/);
+      let cellValue: string;
+      
+      if (isColumnRange) {
+        let lastValue = '';
+        for (let i = data.values.length - 1; i >= 0; i--) {
+          const rowValue = data.values[i]?.[0];
+          if (rowValue !== undefined && rowValue !== null && String(rowValue).trim() !== '') {
+            lastValue = String(rowValue);
+            break;
+          }
+        }
+        cellValue = lastValue || '0';
+      } else {
+        cellValue = data.values[0]?.[0] || '0';
+      }
+      
+      const cleanedValue = String(cellValue).replace(/[₹,\s]/g, '').replace(/[^\d.-]/g, '');
+      const parsedValue = parseFloat(cleanedValue);
+      
+      if (isNaN(parsedValue)) {
+        console.warn(`Invalid numeric value: "${cellValue}", returning 0`);
+        return 0;
+      }
+      
+      return parsedValue;
+    } catch (error) {
+      console.error('Error fetching single value from Google Sheets:', error);
       throw error;
     }
   }
