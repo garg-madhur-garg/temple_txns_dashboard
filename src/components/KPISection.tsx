@@ -34,31 +34,6 @@ const shouldExcludeAccountFromTotal = (bank: BankDetails): boolean => {
   return hasIskconEmpower || hasSbi || hasBob || hasIdbi;
 };
 
-/**
- * Helper function to extract ISKCON Empower balance from bank details
- */
-const getIskconEmpowerBalance = (bankDetails: BankDetails[]): number => {
-  return bankDetails.reduce((total, bank) => {
-    const bankDetailsText = bank.bankDetails?.toLowerCase() || '';
-    const mainPurpose = bank.mainPurpose?.toLowerCase() || '';
-    const accountHolder = bank.accountHolderName?.toLowerCase() || '';
-    
-    // Check if this is an ISKCON Empower account
-    const isIskconEmpower = bankDetailsText.includes('iskcon empower') || 
-                           mainPurpose.includes('iskcon empower') ||
-                           accountHolder.includes('iskcon empower');
-    
-    if (isIskconEmpower) {
-      const balance = bank.currentBalance;
-      if (balance !== undefined && balance !== null && !isNaN(Number(balance))) {
-        return total + Number(balance);
-      }
-    }
-    
-    return total;
-  }, 0);
-};
-
 export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }) => {
   const kpis = dataProcessingService.calculateKPIs(data);
   
@@ -80,12 +55,11 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
     return total + Number(balance);
   }, 0);
   
-  // Calculate ISKCON Empower balances dynamically from bank details
-  const totalIskconEmpowerBalance = getIskconEmpowerBalance(bankDetails);
-  const iskconEmpowerOtherCentersBalance = totalIskconEmpowerBalance - manualKpiConfig.iskconEmpowerPrayagrajBalance;
+  // Set ISKCON Empower Other Centers Fund balance to zero
+  const iskconEmpowerOtherCentersBalance = 0;
   
-  // Add ISKCON EMPOWER PRAYAGRAJ BALANCE to the total
-  const totalCurrentBalance = bankAccountsBalance + manualKpiConfig.iskconEmpowerPrayagrajBalance;
+  // Total balance without manual addition
+  const totalCurrentBalance = bankAccountsBalance;
   
   // Count accounts that are included in the total (excluding the filtered ones)
   const includedAccountsCount = bankDetails.filter(bank => !shouldExcludeAccountFromTotal(bank)).length;
@@ -118,7 +92,7 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
           icon="🏦"
           value={dataProcessingService.formatCurrency(totalCurrentBalance)}
           label="Total Prayagraj Bank Balance"
-          secondary={`${includedAccountsCount} Bank Accounts (excluding ISKCON Empower, SBI, BoB, IDBI) + ISKCON Empower Prayagraj`}
+          secondary={`${includedAccountsCount} Bank Accounts (excluding ISKCON Empower, SBI, BoB, IDBI)`}
         />
       </div>
 
@@ -134,20 +108,7 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
           icon="🕉️"
           value={formatManualKpiCurrency(manualKpiConfig.iskconEmpowerPrayagrajBalance)}
           label="ISKCON Empower Prayagraj Fund"
-          // secondary="Special fund balance"
         />
-        {/* <KPICard
-          icon="🏛️"
-          value="₹0.00"
-          label="ISKCON Empower Other Centers Balance"
-          secondary="Other centers fund balance"
-        />
-        <KPICard
-          icon="🕉️"
-          value="₹0.00"
-          label="ISKCON Empower Prayagraj Balance"
-          secondary="Special fund balance"
-        /> */}
       </div>
     </section>
   );

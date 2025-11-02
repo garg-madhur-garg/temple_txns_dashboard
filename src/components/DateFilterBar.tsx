@@ -16,7 +16,7 @@
  */
 
 import React from 'react';
-import { DateFilter } from '../types';
+import { DateFilter, IncomeRecord } from '../types';
 import styles from './DateFilterBar.module.css';
 
 /**
@@ -27,12 +27,14 @@ import styles from './DateFilterBar.module.css';
  * @property {function} onFilterChange - Callback for filter changes
  * @property {number} dataCount - Number of records in current filter
  * @property {function} onDateRangeChange - Callback for date range changes
+ * @property {IncomeRecord[]} allData - All income data records (used to calculate date range for "All Time")
  */
 interface DateFilterBarProps {
   currentFilter: DateFilter;
   onFilterChange: (filter: DateFilter, specificDate?: string) => void;
   onDateRangeChange: (startDate: string, endDate: string) => void;
   dataCount: number;
+  allData: IncomeRecord[];
 }
 
 /**
@@ -60,11 +62,46 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
   currentFilter,
   onFilterChange,
   onDateRangeChange,
-  dataCount
+  dataCount,
+  allData
 }) => {
   // State for date range inputs
   const [startDate, setStartDate] = React.useState<string>('');
   const [endDate, setEndDate] = React.useState<string>('');
+
+  /**
+   * Get the first and last dates from all data
+   * 
+   * @returns {object|null} Object with first and last dates in YYYY-MM-DD format
+   */
+  const getFirstAndLastDates = React.useMemo(() => {
+    if (!allData || allData.length === 0) {
+      return null;
+    }
+
+    // Parse all dates and find min/max
+    const parseDateString = (dateStr: string): Date => {
+      const [month, day, year] = dateStr.split('/').map(num => parseInt(num, 10));
+      return new Date(year, month - 1, day);
+    };
+
+    const dates = allData.map(record => parseDateString(record.date));
+    const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+
+    // Format date to YYYY-MM-DD for HTML date input
+    const formatDateForInput = (date: Date): string => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    return {
+      first: formatDateForInput(minDate),
+      last: formatDateForInput(maxDate)
+    };
+  }, [allData]);
 
   /**
    * Get date range for a specific filter
@@ -129,8 +166,14 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
     
     // Auto-populate date range fields based on the selected filter
     if (filter === 'all') {
-      setStartDate('');
-      setEndDate('');
+      // When "All Time" is selected, show the first and last dates from all data
+      if (getFirstAndLastDates) {
+        setStartDate(getFirstAndLastDates.first);
+        setEndDate(getFirstAndLastDates.last);
+      } else {
+        setStartDate('');
+        setEndDate('');
+      }
     } else {
       const dateRange = getDateRangeForFilter(filter);
       if (dateRange) {
@@ -139,6 +182,14 @@ export const DateFilterBar: React.FC<DateFilterBarProps> = ({
       }
     }
   };
+
+  // Update date fields when "All Time" filter is active and dates are available
+  React.useEffect(() => {
+    if (currentFilter === 'all' && getFirstAndLastDates) {
+      setStartDate(getFirstAndLastDates.first);
+      setEndDate(getFirstAndLastDates.last);
+    }
+  }, [currentFilter, getFirstAndLastDates]);
 
   /**
    * Handle start date change with validation

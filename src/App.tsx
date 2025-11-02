@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-// import { Analytics } from '@vercel/analytics';
 import { DashboardHeader } from './components/DashboardHeader';
 import { DateFilterBar } from './components/DateFilterBar';
 import { KPISection } from './components/KPISection';
@@ -98,6 +97,7 @@ function App() {
           onFilterChange={setFilter}
           onDateRangeChange={setDateRange}
           dataCount={filteredData.length}
+          allData={data}
         />
         
         <main className={styles.dashboardMain}>
@@ -114,7 +114,6 @@ function App() {
         <ShareModal />
         <LoadingOverlay visible={loading || bankLoading} />
         <MessageContainer messages={messages} onRemove={removeMessage} />
-        {/* <Analytics /> */}
       </div>
     </ThemeProvider>
   );
