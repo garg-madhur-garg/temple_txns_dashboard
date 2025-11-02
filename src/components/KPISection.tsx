@@ -42,7 +42,7 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
     return total + Number(balance);
   }, 0);
   
-  const iskconEmpowerOtherCentersBalance = 0;
+  // const iskconEmpowerOtherCentersBalance = 0;
   const totalCurrentBalance = bankAccountsBalance;
   const includedAccountsCount = bankDetails.filter(bank => !shouldExcludeAccountFromTotal(bank)).length;
 
