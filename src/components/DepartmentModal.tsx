@@ -231,13 +231,13 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
            {content.hasSubSections && departmentName === 'Kitchen' && (
              <>
                <div className={styles.subSection}>
-                 <h4 className={styles.sectionTitle}>Kitchen (Journey Prasad + Coupan)</h4>
+                 <h4 className={styles.sectionTitle}>Journey Prasad</h4>
                  <p className={styles.subSectionDescription}>
                    Special prasad preparation and distribution for devotees' spiritual journeys.
                  </p>
                  <div className={styles.subSectionIncomeGrid}>
                    {(() => {
-                     const journeyPrasadTotals = getSubSectionTotals('Kitchen (Journey Prasad + Coupan)');
+                     const journeyPrasadTotals = getSubSectionTotals('Journey Prasad');
                      return (
                        <>
                          <div className={styles.subIncomeCard}>
@@ -265,6 +265,74 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
                </div>
 
                <div className={styles.subSection}>
+                 <h4 className={styles.sectionTitle}>Prasadam Coupan</h4>
+                 <p className={styles.subSectionDescription}>
+                   Prasadam coupon sales and collections for temple prasadam distribution.
+                 </p>
+                 <div className={styles.subSectionIncomeGrid}>
+                   {(() => {
+                     const prasadamCoupanTotals = getSubSectionTotals('Prasadam Coupan');
+                     return (
+                       <>
+                         <div className={styles.subIncomeCard}>
+                           <span className={styles.incomeLabel}>Cash Income</span>
+                           <span className={styles.incomeValue}>
+                             {dataProcessingService.formatCurrency(prasadamCoupanTotals.cash)}
+                           </span>
+                         </div>
+                         <div className={styles.subIncomeCard}>
+                           <span className={styles.incomeLabel}>Online Income</span>
+                           <span className={styles.incomeValue}>
+                             {dataProcessingService.formatCurrency(prasadamCoupanTotals.online)}
+                           </span>
+                         </div>
+                         <div className={styles.subIncomeCard}>
+                           <span className={styles.incomeLabel}>Total</span>
+                           <span className={`${styles.incomeValue} ${styles.total}`}>
+                             {dataProcessingService.formatCurrency(prasadamCoupanTotals.total)}
+                           </span>
+                         </div>
+                       </>
+                     );
+                   })()}
+                 </div>
+               </div>
+
+               <div className={styles.subSection}>
+                 <h4 className={styles.sectionTitle}>Vaishnav Bhoj</h4>
+                 <p className={styles.subSectionDescription}>
+                   Collections for Vaishnav Bhoj (devotee meal services) and related kitchen services.
+                 </p>
+                 <div className={styles.subSectionIncomeGrid}>
+                   {(() => {
+                     const vaishnavBhojTotals = getSubSectionTotals('Vaishnav Bhoj');
+                     return (
+                       <>
+                         <div className={styles.subIncomeCard}>
+                           <span className={styles.incomeLabel}>Cash Income</span>
+                           <span className={styles.incomeValue}>
+                             {dataProcessingService.formatCurrency(vaishnavBhojTotals.cash)}
+                           </span>
+                         </div>
+                         <div className={styles.subIncomeCard}>
+                           <span className={styles.incomeLabel}>Online Income</span>
+                           <span className={styles.incomeValue}>
+                             {dataProcessingService.formatCurrency(vaishnavBhojTotals.online)}
+                           </span>
+                         </div>
+                         <div className={styles.subIncomeCard}>
+                           <span className={styles.incomeLabel}>Total</span>
+                           <span className={`${styles.incomeValue} ${styles.total}`}>
+                             {dataProcessingService.formatCurrency(vaishnavBhojTotals.total)}
+                           </span>
+                         </div>
+                       </>
+                     );
+                   })()}
+                 </div>
+               </div>
+
+               <div className={`${styles.subSection} ${styles.kitchenSevaOffice}`}>
                  <h4 className={styles.sectionTitle}>Kitchen Seva Office</h4>
                  <p className={styles.subSectionDescription}>
                    Administrative office managing Kitchen operations and food services.
@@ -298,7 +366,7 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
                  </div>
                </div>
 
-               <div className={styles.subSection}>
+               <div className={`${styles.subSection} ${styles.kitchenHundi}`}>
                  <h4 className={styles.sectionTitle}>Kitchen Hundi</h4>
                  <p className={styles.subSectionDescription}>
                    Donation collections specifically for Kitchen operations and food services.
@@ -369,43 +437,9 @@ export const DepartmentModal: React.FC<DepartmentModalProps> = ({
                      );
                    })()}
                  </div>
-               </div>
+              </div>
 
-               <div className={styles.subSection}>
-                 <h4 className={styles.sectionTitle}>Jagannath Hundi</h4>
-                 <p className={styles.subSectionDescription}>
-                   Dedicated donation collections for Lord Jagannath's seva and temple services.
-                 </p>
-                 <div className={styles.subSectionIncomeGrid}>
-                   {(() => {
-                     const jagannathHundiTotals = getSubSectionTotals('Jagannath Hundi');
-                     return (
-                       <>
-                         <div className={styles.subIncomeCard}>
-                           <span className={styles.incomeLabel}>Cash Income</span>
-                           <span className={styles.incomeValue}>
-                             {dataProcessingService.formatCurrency(jagannathHundiTotals.cash)}
-                           </span>
-                         </div>
-                         <div className={styles.subIncomeCard}>
-                           <span className={styles.incomeLabel}>Online Income</span>
-                           <span className={styles.incomeValue}>
-                             {dataProcessingService.formatCurrency(jagannathHundiTotals.online)}
-                           </span>
-                         </div>
-                         <div className={styles.subIncomeCard}>
-                           <span className={styles.incomeLabel}>Total</span>
-                           <span className={`${styles.incomeValue} ${styles.total}`}>
-                             {dataProcessingService.formatCurrency(jagannathHundiTotals.total)}
-                           </span>
-                         </div>
-                       </>
-                     );
-                   })()}
-                 </div>
-               </div>
-
-               <div className={styles.subSection}>
+              <div className={styles.subSection}>
                  <h4 className={styles.sectionTitle}>Yamuna Hundi</h4>
                  <p className={styles.subSectionDescription}>
                    Special donation collections for Yamuna River related activities and conservation.

@@ -107,8 +107,8 @@ export const DepartmentPerformanceChart: React.FC<DepartmentPerformanceChartProp
       // Define sub-sections for main departments
       const subSections: Record<string, string[]> = {
         'Gaushala': ['Gaushala', 'Gaushala Seva Office', 'Gaushala Hundi'],
-        'Kitchen': ['Kitchen', 'Kitchen (Journey Prasad + Coupan)', 'Kitchen Seva Office', 'Kitchen Hundi'],
-        'Hundi': ['Hundi', 'Temple Hundi', 'Jagannath Hundi', 'Yamuna Hundi'],
+        'Kitchen': ['Kitchen', 'Journey Prasad', 'Kitchen Seva Office', 'Kitchen Hundi', 'Prasadam Coupan', 'Vaishnav Bhoj'],
+        'Hundi': ['Hundi', 'Temple Hundi', 'Yamuna Hundi'],
         'Other Donations': ['Other Donations', 'General', 'PWS']
       };
       
