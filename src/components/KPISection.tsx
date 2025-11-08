@@ -81,7 +81,7 @@ export const KPISection: React.FC<KPISectionProps> = ({ data, bankDetails = [] }
           icon="🏛️"
           // value={dataProcessingService.formatCurrency(iskconEmpowerOtherCentersBalance)}
           value="Not_Available"
-          label="ISKCON Empower Other Centers Fund"
+          label="ISKCON Empower Other Centers Remaining Fund "
           secondary="Available with us"
         />
         <KPICard
