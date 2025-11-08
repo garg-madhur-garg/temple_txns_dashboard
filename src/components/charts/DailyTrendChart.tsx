@@ -33,7 +33,30 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstanceRef = useRef<any>(null);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-  const [dateRange, setDateRange] = useState<{ start: string; end: string } | null>(null);
+  
+  // Initialize default date range to October of current year
+  const getDefaultDateRange = (): { start: string; end: string } => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    
+    // Set to October (month index 9, since months are 0-indexed)
+    const startOfOctober = new Date(currentYear, 9, 1); // October 1st
+    const endOfOctober = new Date(currentYear, 9 + 1, 0); // Last day of October
+    
+    const formatDate = (date: Date): string => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+    
+    return {
+      start: formatDate(startOfOctober),
+      end: formatDate(endOfOctober)
+    };
+  };
+  
+  const [dateRange, setDateRange] = useState<{ start: string; end: string } | null>(getDefaultDateRange());
   const [showFilters, setShowFilters] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState<string>('');
 
@@ -337,7 +360,7 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({ data }) => {
    */
   const clearFilters = () => {
     setSelectedDepartments([]);
-    setDateRange(null);
+    setDateRange(getDefaultDateRange()); // Reset to default October range
     setSelectedPeriod('');
   };
 
