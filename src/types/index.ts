@@ -253,17 +253,17 @@ export interface Message {
 // Department order as specified by user:
 // Boat, Guest House, Govindas, Vrinda's Food Court, Gift Shop, Railway Shop, Gaushala, Kitchen, Gopal's Sweet Shop, Hundi, Nitya Seva, Other Donations
 export const ALL_DEPARTMENTS = [
-  "Boat",                        // Boat services
   "Guest House",                 // Accommodation services
   "Govindas",                    // Govindas restaurant
-  "Vrinda's Food Court",         // Food court
   "Gift Shop",                   // Retail merchandise
-  "Railway BBT",                // Railway shop services
-  "Gaushala",                    // Gaushala department
   "Kitchen",                     // Food preparation
-  "Gopal's Sweet Shop",          // Sweet shop
-  "Hundi",                       // Hundi department
   "Nitya Seva",                  // Nitya Seva department
+  "Gopal's Sweet Shop",          // Sweet shop
+  "Gaushala",                    // Gaushala department
+  "Railway BBT",                // Railway shop services
+  "Vrinda's Food Court",         // Food court
+  "Hundi",                       // Hundi department
+  "Boat",                        // Boat services
   "Other Donations"              // Other donations including PWS and general donations
 ] as const;
 
